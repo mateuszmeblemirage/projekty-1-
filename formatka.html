@@ -1,0 +1,1825 @@
+<title>Warsztat Formatka</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+/* Układ: ciemna, ciepła pracownia – grafit z nutą orzecha, mosiężny akcent; panel ustawień obok listy formatek, rozkroje pod spodem */
+:root{
+  color-scheme:dark;
+  --bg:#13110e; --surface:#1c1915; --surface2:#24201b; --raise:#2c2721;
+  --ink:#efe6d8; --muted:#a3988a; --faint:#6f665a;
+  --line:#322c25; --line-strong:#4a4237;
+  --accent:#c9a165; --accent-hi:#dcb97f; --accent-ink:#1a140c; --accent-soft:rgba(201,161,101,.13);
+  --k1:#8fbaa6; --k2:#d27a52; --k3:#ab9de0; --k4:#7fb0e0; --k5:#e0cc72;
+  --board:#2a251f; --part:#3a3229; --part-line:#13110e;
+  --ok:#86c196; --warn:#e2ab5c; --bad:#e3826f;
+  --paper:#ffffff; --paper-ink:#1f1b16; --paper-muted:#6b6358; --paper-line:#e7e1d8;
+  --f-display:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+  --f-body:'Manrope',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
+  --r:10px;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;
+  background-image:radial-gradient(1200px 500px at 85% -10%,rgba(201,161,101,.07),transparent 60%)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+::selection{background:var(--accent);color:var(--accent-ink)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.wrap{max-width:1320px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* Header */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:rgba(19,17,14,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:24px;flex-wrap:wrap;padding-block:14px}
+.brand{display:flex;align-items:baseline;gap:10px;font-family:var(--f-display);font-weight:600;font-size:28px;letter-spacing:.01em;line-height:1}
+.brand em{font-style:normal;color:var(--accent)}
+.brand small{font-family:var(--f-body);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);font-weight:600}
+nav.tabs{display:flex;gap:2px;flex-wrap:wrap;margin-left:auto}
+nav.tabs a{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;color:var(--muted);padding:9px 14px;border-radius:99px;transition:color .15s,background .15s}
+nav.tabs a:hover{color:var(--ink)}
+nav.tabs a[aria-current="page"]{color:var(--accent-ink);background:var(--accent)}
+
+main{padding-block:34px 70px}
+section.view{display:flex;flex-direction:column;gap:22px}
+h1,h2,h3{margin:0;text-wrap:balance;line-height:1.1}
+h1{font-family:var(--f-display);font-weight:600;font-size:44px;letter-spacing:-.005em}
+h2{font-family:var(--f-display);font-weight:600;font-size:26px}
+h3{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
+.lead{color:var(--muted);margin:8px 0 0;max-width:64ch}
+.head-row{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;min-width:0}
+.panel > h2,.panel > h3{margin-bottom:14px}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.panel-head h2,.panel-head h3{margin:0}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.label{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:600}
+
+/* Form controls */
+.in{width:100%;background:var(--surface2);border:1px solid var(--line-strong);border-radius:6px;padding:8px 10px;min-width:0;transition:border-color .15s}
+select.in{appearance:none;padding-right:28px;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 15px) 50%,calc(100% - 10px) 50%;background-size:5px 5px;background-repeat:no-repeat;cursor:pointer}
+select.in option{background:var(--surface2);color:var(--ink)}
+textarea.in{resize:vertical;min-height:84px}
+.in:hover{border-color:var(--faint)}
+.in:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.check{display:flex;align-items:center;gap:9px;cursor:pointer}
+.check input{width:16px;height:16px;accent-color:var(--accent)}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line-strong);background:transparent;border-radius:99px;padding:9px 18px;cursor:pointer;font-weight:600;font-size:14px;white-space:nowrap;text-decoration:none;color:var(--ink);transition:border-color .15s,background .15s}
+.btn:hover{border-color:var(--accent);color:var(--accent-hi)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.primary:hover{background:var(--accent-hi);color:var(--accent-ink)}
+.btn.ghost{border-color:transparent;color:var(--muted)}
+.btn.ghost:hover{color:var(--ink);background:var(--surface2)}
+.btn.danger:hover{color:var(--bad)}
+.btn[disabled]{opacity:.6;cursor:wait}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap}
+.iconbtn{border:0;background:transparent;color:var(--faint);cursor:pointer;width:30px;height:30px;border-radius:6px;font-size:18px;line-height:1}
+.iconbtn:hover{background:var(--surface2);color:var(--bad)}
+details.more{border-top:1px solid var(--line);margin-top:16px;padding-top:12px}
+details.more summary{cursor:pointer;color:var(--muted);font-size:13px;font-weight:600;list-style:none}
+details.more summary::before{content:"+ "}
+details.more[open] summary::before{content:"− "}
+details.more[open] summary{margin-bottom:12px}
+
+/* Cut layout */
+.cut-layout{display:grid;grid-template-columns:320px minmax(0,1fr);gap:22px;align-items:start}
+.side-col{display:flex;flex-direction:column;gap:18px}
+@media (max-width:1050px){.cut-layout{grid-template-columns:minmax(0,1fr)}}
+.format-badge{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px dashed var(--line-strong);border-radius:8px;margin-bottom:14px}
+.format-badge .sheet-ico{width:38px;height:28px;border:1.5px solid var(--accent);border-radius:2px;flex:none}
+.format-badge b{font-family:var(--f-mono);font-weight:500;font-size:15px}
+.mat-card{border-top:1px solid var(--line);padding:14px 0 2px;display:flex;flex-direction:column;gap:10px}
+.mat-card:first-of-type{border-top:0;padding-top:0}
+.mat-top{display:flex;gap:8px;align-items:center}
+.edge-row{display:grid;grid-template-columns:14px minmax(0,1fr) minmax(0,1fr);gap:10px;align-items:end}
+.edge-row + .edge-row{margin-top:12px}
+.dot{width:14px;height:5px;border-radius:3px;margin-bottom:16px}
+
+/* Parts table */
+.table-scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%}
+table.parts{min-width:720px}
+table th{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:600;text-align:left;padding:8px 6px;border-bottom:1px solid var(--line-strong);white-space:nowrap}
+table td{padding:6px;border-bottom:1px solid var(--line);vertical-align:middle}
+table td.num{color:var(--faint);font-family:var(--f-mono);font-size:12px;width:28px}
+.parts .in{padding:7px 8px;background:transparent;border-color:transparent}
+.parts .in:hover{border-color:var(--line-strong)}
+.parts .in:focus{background:var(--surface2)}
+.parts select.in{background-color:transparent}
+.parts .dim{width:84px;text-align:right;font-family:var(--f-mono)}
+.parts .qty{width:56px;text-align:right;font-family:var(--f-mono)}
+.parts td.cut{font-family:var(--f-mono);font-size:12px;white-space:nowrap;color:var(--muted)}
+.parts tr.bad td{background:rgba(227,130,111,.08)}
+.parts tbody tr:hover td{background:rgba(255,255,255,.015)}
+
+/* Edge widget */
+.ew{position:relative;width:70px;height:40px;flex:none}
+.ew .core{position:absolute;inset:8px;border:1px solid var(--line-strong);background:var(--raise);border-radius:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--muted);font-family:var(--f-mono)}
+.ew .core:hover{border-color:var(--accent)}
+.ew .s{position:absolute;border:0;padding:0;background:transparent;cursor:pointer}
+.ew .s::after{content:"";position:absolute;background:var(--line-strong);border-radius:2px;opacity:.5;transition:background .12s,opacity .12s}
+.ew .s:hover::after{opacity:1}
+.ew .s.t,.ew .s.b{left:8px;right:8px;height:8px}
+.ew .s.t{top:0}.ew .s.b{bottom:0}
+.ew .s.l,.ew .s.r{top:8px;bottom:8px;width:8px}
+.ew .s.l{left:0}.ew .s.r{right:0}
+.ew .s.t::after,.ew .s.b::after{left:0;right:0;height:3px;top:3px}
+.ew .s.b::after{top:auto;bottom:3px}
+.ew .s.l::after,.ew .s.r::after{top:0;bottom:0;width:3px;left:3px}
+.ew .s.r::after{left:auto;right:3px}
+.ew .s.e1::after{background:var(--k1);opacity:1}
+.ew .s.e2::after{background:var(--k2);opacity:1}
+.ew .s.e3::after{background:var(--k3);opacity:1}
+.ew .s.e4::after{background:var(--k4);opacity:1}
+.ew .s.e5::after{background:var(--k5);opacity:1}
+.ew .s.hv.t::after,.ew .s.hv.b::after{height:5px;top:2px}
+.ew .s.hv.b::after{top:auto;bottom:2px}
+.ew .s.hv.l::after,.ew .s.hv.r::after{width:5px;left:2px}
+.ew .s.hv.r::after{left:auto;right:2px}
+.legend{display:flex;gap:16px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--muted)}
+.legend i{display:inline-block;width:18px;height:4px;border-radius:2px;vertical-align:middle;margin-right:6px}
+
+/* Summary strip */
+.summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:var(--surface);border:1px solid var(--line);border-radius:var(--r)}
+.summary > div{padding:20px 22px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.summary > div + div{border-left:1px solid var(--line)}
+.summary .v{font-family:var(--f-display);font-size:44px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums lining-nums}
+.summary .v small{font-family:var(--f-body);font-size:14px;font-weight:500;color:var(--muted);margin-left:5px}
+.summary .sub{font-size:13px;color:var(--muted)}
+@media (max-width:860px){.summary{grid-template-columns:repeat(2,minmax(0,1fr))}.summary > div:nth-child(3){border-left:0}.summary > div:nth-child(n+3){border-top:1px solid var(--line)}}
+@media (max-width:420px){.summary .v{font-size:36px}.summary > div{padding:16px}}
+.meter{height:4px;background:var(--raise);border-radius:2px;overflow:hidden;margin-top:8px}
+.meter b{display:block;height:100%;border-radius:2px}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:3px 10px;border-radius:99px;background:var(--surface2);color:var(--muted)}
+.pill.ok{color:var(--ok);background:rgba(134,193,150,.12)}
+.pill.warn{color:var(--warn);background:rgba(226,171,92,.12)}
+.pill.bad{color:var(--bad);background:rgba(227,130,111,.12)}
+.alert{border:1px solid rgba(227,130,111,.5);color:var(--bad);border-radius:var(--r);padding:12px 16px;background:rgba(227,130,111,.07)}
+
+/* Boards */
+.mat-block{display:flex;flex-direction:column;gap:14px}
+.mat-block + .mat-block{margin-top:30px}
+.boards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,480px),1fr));gap:16px}
+.board{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0;margin:0}
+.board-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.board-head b{font-family:var(--f-display);font-size:20px;font-weight:600}
+.board svg{width:100%;height:auto;display:block;border-radius:3px}
+.board .sheet{fill:var(--board)}
+.board .pp{fill:var(--part);stroke:var(--part-line)}
+.board .pnum{fill:var(--ink);font-family:var(--f-body);font-weight:700}
+.board .pdim{fill:var(--muted);font-family:var(--f-mono)}
+.board .e1{stroke:var(--k1)} .board .e2{stroke:var(--k2)} .board .e3{stroke:var(--k3)} .board .e4{stroke:var(--k4)} .board .e5{stroke:var(--k5)}
+.board-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:2px 16px;font-size:12.5px;color:var(--muted)}
+.board-list span b{color:var(--ink);font-weight:600;margin-right:4px;font-family:var(--f-mono)}
+
+/* Drawers */
+.drawer-layout{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:22px;align-items:start}
+@media (max-width:900px){.drawer-layout{grid-template-columns:minmax(0,1fr)}}
+.dr-diag{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:22px;align-items:start}
+@media (max-width:620px){.dr-diag{grid-template-columns:minmax(0,1fr)}}
+.dr-diag svg{width:100%;height:auto;max-height:360px}
+.dr-diag .cab{fill:var(--surface2);stroke:var(--line-strong);stroke-width:3}
+.dr-diag .fr{fill:var(--accent-soft);stroke:var(--accent);stroke-width:3}
+.dr-diag .box{fill:none;stroke:var(--muted);stroke-width:2;stroke-dasharray:10 7}
+.dr-diag text{fill:var(--ink);font-family:var(--f-mono);font-size:34px}
+.formula{font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:5px}
+.formula b{color:var(--ink);font-family:var(--f-mono);font-weight:500}
+table.list td.r,table.list th.r{text-align:right}
+table.list td{font-variant-numeric:tabular-nums}
+table.list tr.grp td{color:var(--accent);font-weight:700;font-size:11px;letter-spacing:.16em;text-transform:uppercase;padding-top:16px;border-bottom-color:var(--line-strong)}
+.edge-mini{display:inline-block;width:30px;height:18px;border:1px solid var(--line-strong);position:relative;vertical-align:middle;border-radius:1px}
+.edge-mini span{position:absolute}
+.edge-mini .t{left:0;right:0;top:-2px;height:3px}.edge-mini .b{left:0;right:0;bottom:-2px;height:3px}
+.edge-mini .l{top:0;bottom:0;left:-2px;width:3px}.edge-mini .r{top:0;bottom:0;right:-2px;width:3px}
+.edge-mini .e1{background:var(--k1)}.edge-mini .e2{background:var(--k2)}.edge-mini .e3{background:var(--k3)}.edge-mini .e4{background:var(--k4)}.edge-mini .e5{background:var(--k5)}
+.form-sec{display:flex;flex-direction:column;gap:12px}
+.form-sec + .form-sec{border-top:1px solid var(--line);padding-top:18px;margin-top:18px}
+
+/* Szafa */
+.sz-diag{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)}
+@media (max-width:760px){.sz-diag{grid-template-columns:minmax(0,1fr)}}
+.sz-diag svg{max-height:420px}
+.sz-diag .sh{fill:var(--line-strong)}
+.sz-diag .pl{fill:var(--surface);stroke:var(--line-strong);stroke-width:3}
+.sz-diag .rod{stroke:var(--accent);stroke-width:12;stroke-linecap:round}
+.sz-diag .door{fill:none;stroke:var(--k4);stroke-width:5;stroke-dasharray:18 12}
+.sz-diag .dl{fill:var(--k4)}
+.sz-diag .sl{fill:var(--muted)}
+.sec-row{display:grid;grid-template-columns:86px minmax(0,1fr) 74px;gap:8px;align-items:center}
+.sec-row .label{white-space:nowrap}
+
+/* Quote */
+.quote-layout{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:22px;align-items:start}
+@media (max-width:980px){.quote-layout{grid-template-columns:minmax(0,1fr)}}
+.sticky{position:sticky;top:calc(env(safe-area-inset-top,0px) + 86px)}
+.sum-row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+.sum-row:last-child{border-bottom:0}
+.sum-row.big{font-family:var(--f-display);font-size:34px;font-weight:600;border-top:1px solid var(--accent);border-bottom:0;padding-top:14px;margin-top:6px;color:var(--accent-hi)}
+.sum-row.profit{color:var(--ok);font-weight:600}
+table.q .in{padding:7px 8px}
+table.q .num-in{width:96px;text-align:right;font-family:var(--f-mono)}
+table.q td.r{text-align:right;font-family:var(--f-mono);white-space:nowrap}
+table.q{min-width:560px}
+.auto-tag{font-family:var(--f-body);font-size:10px;padding:3px 8px;border-radius:99px;background:var(--accent-soft);color:var(--accent);font-weight:700;margin-left:8px;text-transform:uppercase;letter-spacing:.12em;vertical-align:middle}
+
+/* Offer */
+.offer-layout{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:22px;align-items:start}
+@media (max-width:1000px){.offer-layout{grid-template-columns:minmax(0,1fr)}}
+.colors{display:flex;gap:10px}
+.colors button{width:30px;height:30px;border-radius:50%;border:2px solid var(--surface);box-shadow:0 0 0 1px var(--line-strong);cursor:pointer}
+.colors button[aria-pressed="true"]{box-shadow:0 0 0 2px var(--accent)}
+.seg{display:inline-flex;border:1px solid var(--line-strong);border-radius:99px;padding:3px;gap:2px}
+.seg button{border:0;background:transparent;padding:6px 14px;cursor:pointer;font-weight:600;color:var(--muted);border-radius:99px;font-size:13px}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.paper-wrap{overflow-x:auto;padding-bottom:4px}
+#paper{--oa:#2b2620;width:100%;max-width:760px;min-width:560px;margin:0 auto;background:var(--paper);color:var(--paper-ink);border-radius:2px;box-shadow:0 20px 60px rgba(0,0,0,.5);padding:48px 52px;font-family:var(--f-body);font-size:14px;line-height:1.5;display:flex;flex-direction:column;gap:24px}
+#paper .p-top{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;border-bottom:2px solid var(--oa);padding-bottom:20px}
+#paper .p-logo{max-height:64px;max-width:200px;object-fit:contain;display:block;margin-bottom:8px}
+#paper .p-co{font-family:var(--f-display);font-size:28px;font-weight:700;color:var(--oa);line-height:1.1}
+#paper .p-meta{text-align:right;font-size:13px;color:var(--paper-muted)}
+#paper .p-meta b{color:var(--paper-ink)}
+#paper .p-title{font-family:var(--f-display);font-size:42px;font-weight:600;line-height:1.05;color:var(--paper-ink)}
+#paper .p-kicker{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--oa);font-weight:700;margin-bottom:6px}
+#paper .p-lab{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--paper-muted);font-weight:700;margin-bottom:5px}
+#paper .p-img{width:100%;max-height:300px;object-fit:cover;border-radius:2px;display:block}
+#paper ul{margin:0;padding-left:18px}
+#paper ul li{margin:3px 0}
+#paper table{width:100%;border-collapse:collapse}
+#paper th{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--paper-muted);text-align:left;border-bottom:1px solid var(--paper-ink);padding:6px 4px;font-weight:700}
+#paper td{padding:10px 4px;border-bottom:1px solid var(--paper-line);vertical-align:top}
+#paper .r{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+#paper .p-total{display:flex;justify-content:flex-end}
+#paper .p-total > div{min-width:290px}
+#paper .p-total .row{display:flex;justify-content:space-between;padding:4px 0;font-variant-numeric:tabular-nums}
+#paper .p-total .gross{background:var(--oa);color:#fff;padding:12px 16px;margin-top:8px;font-family:var(--f-display);font-size:26px;font-weight:700;border-radius:2px}
+#paper .p-terms{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;border-top:1px solid var(--paper-line);padding-top:16px}
+#paper .p-terms b{display:block;font-size:15px}
+#paper .p-foot{font-size:12px;color:var(--paper-muted);border-top:1px solid var(--paper-line);padding-top:12px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+/* Modal, toast */
+.modal{position:fixed;inset:0;z-index:50;background:rgba(5,4,3,.75);display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.modal-box{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);max-width:900px;width:100%;max-height:100%;overflow:auto;padding:20px;display:flex;flex-direction:column;gap:12px}
+.modal-box img{width:100%}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--accent);color:var(--accent-ink);padding:10px 18px;border-radius:99px;font-weight:600;z-index:60;font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.example-note{font-size:13px;border:1px solid var(--line-strong);border-radius:var(--r);padding:10px 14px 10px 16px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;color:var(--muted)}
+.example-note b{color:var(--ink)}
+
+/* Otwarte zlecenie w nagłówku */
+.proj-pill{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink);border:1px solid var(--line-strong);border-radius:99px;padding:6px 14px 6px 12px;font-size:13px;font-weight:600;max-width:300px;min-width:0;transition:border-color .15s}
+.proj-pill:hover{border-color:var(--accent)}
+.proj-pill .d{width:8px;height:8px;border-radius:50%;background:var(--st,var(--muted));flex:none}
+.proj-pill span:last-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.proj-pill small{color:var(--muted);font-weight:500;margin-right:2px}
+
+/* Konto i stan zapisu */
+.acct{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);min-width:0}
+.acct img{width:24px;height:24px;border-radius:50%;flex:none}
+.acct .sd{width:7px;height:7px;border-radius:50%;background:var(--sc,var(--muted));flex:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--sc,var(--muted)) 20%,transparent)}
+#sync-t{white-space:nowrap}
+@media (max-width:760px){#sync-t{display:none}}
+
+/* Zlecenia */
+.pj-toolbar{display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;align-items:center}
+.pj-toolbar .seg{flex-wrap:wrap;border-radius:20px}
+.seg button .c{opacity:.65;margin-left:5px;font-weight:500}
+.pj-list{display:flex;flex-direction:column;gap:10px}
+.pj-row{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1.3fr) minmax(0,1.1fr) minmax(0,1.1fr) 168px auto;gap:20px;align-items:center;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--st);border-radius:var(--r);padding:16px 18px}
+.pj-row.active{background:linear-gradient(90deg,var(--accent-soft),transparent 45%),var(--surface)}
+.pj-type{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.pj-type b{color:var(--accent)}
+.pj-name{font-family:var(--f-display);font-size:23px;font-weight:600;line-height:1.15;margin:2px 0}
+.pj-meta{font-size:13px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pj-row .label{display:block;margin-bottom:2px}
+select.pj-status{color:var(--st);font-weight:700}
+.btn.sm{padding:6px 12px;font-size:13px}
+.pj-actions{justify-content:flex-end;flex-wrap:nowrap}
+@media (max-width:1150px){
+  .pj-row{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:14px}
+  .pj-row .pj-main{grid-column:1/-1}
+  .pj-actions{grid-column:1/-1;justify-content:flex-start;flex-wrap:wrap}
+}
+.empty{border:1px dashed var(--line-strong);border-radius:var(--r);padding:44px 20px;text-align:center;color:var(--muted)}
+
+@media (max-width:560px){
+  h1{font-size:36px}
+  .proj-pill{max-width:100%;order:3}
+  nav.tabs{margin-left:0;width:100%;overflow-x:auto;flex-wrap:nowrap}
+  nav.tabs a{padding:8px 11px;letter-spacing:.08em}
+  .panel{padding:16px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand">Formatka<em>.</em><small>pracownia</small></div>
+    <a class="proj-pill" id="proj-pill" href="#projekty" title="Otwarte zlecenie – kliknij, by przejść do listy zleceń"></a>
+    <div class="acct" id="acct" role="status"><img id="acct-av" alt="" hidden><span class="sd"></span><span id="sync-t">Wczytywanie…</span></div>
+    <nav class="tabs" aria-label="Moduły">
+      <a href="#projekty" data-tab="projekty">Zlecenia</a>
+      <a href="#rozkroj" data-tab="rozkroj">Rozkrój</a>
+      <a href="#szuflady" data-tab="szuflady">Szuflady</a>
+      <a href="#szafa" data-tab="szafa">Szafy</a>
+      <a href="#wycena" data-tab="wycena">Wycena</a>
+      <a href="#oferta" data-tab="oferta">Oferta</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ================= ZLECENIA ================= -->
+<section class="view" id="v-projekty" hidden>
+  <div class="head-row">
+    <div>
+      <h1>Zlecenia</h1>
+      <p class="lead">Wszystkie realizacje w jednym miejscu. Otwórz zlecenie, żeby zrobić dla niego rozkrój, szuflady, wycenę i ofertę.</p>
+      <p class="small muted" id="acct-note" style="margin:8px 0 0;max-width:70ch"></p>
+    </div>
+    <div class="btn-row"><button class="btn primary" id="btn-newproj">+ Nowe zlecenie</button></div>
+  </div>
+  <div class="summary" id="pj-kpis"></div>
+  <div class="pj-toolbar">
+    <div class="seg" id="pj-filter"></div>
+    <input class="in" id="pj-search" placeholder="Szukaj klienta lub nazwy…" style="max-width:300px" aria-label="Szukaj zlecenia">
+  </div>
+  <div class="pj-list" id="pj-list"></div>
+</section>
+
+<!-- ================= ROZKRÓJ ================= -->
+<section class="view" id="v-rozkroj">
+  <div class="head-row">
+    <div>
+      <h1>Rozkrój płyty</h1>
+      <p class="lead">Wpisz wymiary formatek i kliknij boki, które mają być oklejone. Liczba płyt i metry kantu liczą się same.</p>
+    </div>
+    <div class="btn-row">
+      <button class="btn" id="btn-csv">Kopiuj listę</button>
+      <button class="btn ghost" id="btn-sample">Przykład</button>
+      <button class="btn ghost danger" id="btn-clear">Wyczyść formatki</button>
+    </div>
+  </div>
+  <div id="example-note"></div>
+
+  <div class="summary" id="kpis"></div>
+  <div id="cut-warn"></div>
+
+  <div class="cut-layout">
+    <div class="side-col">
+      <div class="panel">
+        <h3>Płyty</h3>
+        <div class="format-badge"><span class="sheet-ico" aria-hidden="true"></span><div><div class="label">Format arkusza</div><b>2800 × 2070 mm</b></div></div>
+        <div id="mats"></div>
+        <button class="btn" id="btn-addmat" style="margin-top:14px">+ Dodaj dekor</button>
+      </div>
+      <div class="panel">
+        <h3>Kant</h3>
+        <div class="grid">
+          <div id="edge-types"></div>
+          <button class="btn" id="btn-addedge" style="justify-self:start">+ Dodaj kant</button>
+          <label class="field" style="border-top:1px solid var(--line);padding-top:14px"><span class="label">Klejenie kantu (zł / mb)</span><input class="in mono" id="s-glue" inputmode="decimal" placeholder="np. 2,50"></label>
+        </div>
+        <details class="more">
+          <summary>Więcej ustawień</summary>
+          <div class="grid g2">
+            <label class="field"><span class="label">Docinka brzegów (mm)</span><select class="in mono" id="s-trim"></select></label>
+            <label class="field"><span class="label">Zapas kantu na bok (mm)</span><select class="in mono" id="s-edgeAdd"></select></label>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <div class="panel" style="min-width:0">
+      <div class="panel-head">
+        <h2>Formatki</h2>
+        <div class="legend" id="legend"></div>
+      </div>
+      <div class="table-scroll">
+        <table class="parts">
+          <thead><tr><th>#</th><th>Nazwa</th><th>Długość</th><th>Szerokość</th><th>Szt.</th><th>Dekor</th><th title="Kliknij bok, by przełączać kant. Kliknij środek: wszystkie boki.">Kant</th><th></th><th></th></tr></thead>
+          <tbody id="parts-body"></tbody>
+        </table>
+      </div>
+      <div class="btn-row" style="margin-top:16px;justify-content:space-between;align-items:center">
+        <button class="btn primary" id="btn-addpart">+ Dodaj formatkę</button>
+        <span class="small muted">Kant: kliknij bok, by go okleić lub zdjąć okleinę, środek zmienia wszystkie boki. Enter dodaje wiersz.</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="boards-out"></div>
+</section>
+
+<!-- ================= SZUFLADY ================= -->
+<section class="view" id="v-szuflady" hidden>
+  <div class="head-row">
+    <div>
+      <h1>Rozpis szuflad</h1>
+      <p class="lead">Podaj wymiary szafki i rodzaj prowadnic. Dostaniesz listę elementów skrzynek i frontów, którą jednym kliknięciem dodasz do rozkroju i wyceny.</p>
+    </div>
+  </div>
+  <div class="drawer-layout">
+    <div class="panel">
+      <div class="form-sec">
+        <h3>Korpus szafki</h3>
+        <div class="grid g2">
+          <label class="field"><span class="label">Szerokość zewn.</span><input class="in mono" data-d="W" inputmode="decimal"></label>
+          <label class="field"><span class="label">Wysokość</span><input class="in mono" data-d="H" inputmode="decimal"></label>
+          <label class="field"><span class="label">Głębokość</span><input class="in mono" data-d="D" inputmode="decimal"></label>
+          <label class="field"><span class="label">Grubość płyty</span><select class="in mono" data-d="t"></select></label>
+        </div>
+      </div>
+      <div class="form-sec">
+        <h3>Szuflady</h3>
+        <div class="grid g2">
+          <label class="field"><span class="label">Liczba szuflad</span><input class="in mono" data-d="n" inputmode="numeric"></label>
+          <label class="field"><span class="label">Podział frontów</span><input class="in mono" data-d="ratio" placeholder="np. 1:1:2"></label>
+          <label class="field" style="grid-column:1/-1"><span class="label">Prowadnice</span>
+            <select class="in" data-d="type">
+              <option value="kulkowe">Kulkowe, pełny wysuw</option>
+              <option value="rolkowe">Rolkowe</option>
+              <option value="pod">Podszufladowe ukryte (boki 16 mm)</option>
+            </select></label>
+          <label class="field"><span class="label">Długość prowadnic</span><select class="in mono" data-d="slide"></select></label>
+          <label class="field"><span class="label">Luz na prowadnice</span><input class="in mono" data-d="clear" inputmode="decimal"></label>
+          <label class="field"><span class="label">Grubość boków</span><select class="in mono" data-d="side"></select></label>
+          <label class="field"><span class="label">Front − skrzynka</span><input class="in mono" data-d="reserve" inputmode="decimal"></label>
+          <label class="field"><span class="label">Szczelina frontów</span><select class="in mono" data-d="gap"></select></label>
+          <label class="field"><span class="label">Dno</span>
+            <select class="in" data-d="bottom">
+              <option value="hdf_pod">HDF 3 mm podbijany</option>
+              <option value="hdf_rowek">HDF 3 mm we wpust</option>
+            </select></label>
+        </div>
+      </div>
+      <div class="form-sec">
+        <h3>Dekor</h3>
+        <div class="grid g2">
+          <label class="field"><span class="label">Skrzynki</span><select class="in" data-d="boxMat"></select></label>
+          <label class="field"><span class="label">Fronty</span><select class="in" data-d="frontMat"></select></label>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:22px;min-width:0">
+      <div class="panel">
+        <div class="dr-diag">
+          <div id="dr-svg"></div>
+          <div class="formula" id="dr-formula"></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Elementy</h2>
+          <button class="btn primary" id="btn-dr-add">Dodaj do rozkroju i wyceny</button>
+        </div>
+        <div class="table-scroll"><table class="list" id="dr-table"></table></div>
+        <p class="small muted" style="margin:12px 0 0">Wymiary gotowych elementów (z kantem). Dno we wpust liczone dla frezu 8 mm.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SZAFA PRZESUWNA ================= -->
+<section class="view" id="v-szafa" hidden>
+  <div class="head-row">
+    <div>
+      <h1>Szafa przesuwna</h1>
+      <p class="lead">Podaj wymiary wnęki lub szafy, liczbę drzwi i układ wnętrza. Dostaniesz korpus, półki, drążki i wymiary skrzydeł do zamówienia.</p>
+    </div>
+  </div>
+  <div class="drawer-layout">
+    <div class="panel">
+      <div class="form-sec">
+        <h3>Wymiary</h3>
+        <label class="field"><span class="label">Rodzaj zabudowy</span>
+          <select class="in" data-z="mode">
+            <option value="wneka">We wnęce (drzwi od ściany do ściany)</option>
+            <option value="korpus">Z własnym korpusem (drzwi między bokami)</option>
+          </select></label>
+        <div class="grid g2">
+          <label class="field"><span class="label">Szerokość</span><input class="in mono" data-z="W" inputmode="decimal"></label>
+          <label class="field"><span class="label">Wysokość</span><input class="in mono" data-z="H" inputmode="decimal"></label>
+          <label class="field"><span class="label">Głębokość</span><input class="in mono" data-z="D" inputmode="decimal"></label>
+          <label class="field"><span class="label">Grubość płyty</span><select class="in mono" data-z="t"></select></label>
+          <label class="field"><span class="label">Cokół</span><select class="in mono" data-z="cokol"></select></label>
+          <label class="field"><span class="label">Miejsce na tory drzwi</span><select class="in mono" data-z="zone"></select></label>
+        </div>
+      </div>
+      <div class="form-sec">
+        <h3>Drzwi</h3>
+        <div class="grid g2">
+          <label class="field"><span class="label">Liczba skrzydeł</span><select class="in mono" data-z="n"></select></label>
+          <label class="field"><span class="label">Wypełnienie</span>
+            <select class="in" data-z="fill">
+              <option value="plyta">Płyta 10 mm</option>
+              <option value="lustro">Lustro</option>
+              <option value="mix">Płyta + lustro</option>
+            </select></label>
+          <label class="field"><span class="label">Zakładka skrzydeł (mm)</span><input class="in mono" data-z="overlap" inputmode="decimal"></label>
+          <label class="field"><span class="label">Odliczenie wys. systemu (mm)</span><input class="in mono" data-z="hRed" inputmode="decimal"></label>
+        </div>
+      </div>
+      <div class="form-sec">
+        <h3>Wnętrze</h3>
+        <div class="grid g2">
+          <label class="field"><span class="label">Liczba sekcji</span><select class="in mono" data-z="s"></select></label>
+          <label class="field"><span class="label">Dekor</span><select class="in" data-z="mat"></select></label>
+        </div>
+        <div id="sz-secs" class="grid" style="gap:8px"></div>
+        <label class="check small"><input type="checkbox" data-z="back"> Plecy z HDF</label>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:22px;min-width:0">
+      <div class="panel">
+        <div class="dr-diag sz-diag">
+          <div id="sz-svg"></div>
+          <div class="formula" id="sz-formula"></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Elementy</h2>
+          <button class="btn primary" id="btn-sz-add">Dodaj do rozkroju i wyceny</button>
+        </div>
+        <div class="table-scroll"><table class="list" id="sz-table"></table></div>
+        <p class="small muted" style="margin:12px 0 0">Zakładka skrzydeł i odliczenie wysokości zależą od systemu drzwi. Sprawdź je w karcie katalogowej swojego dostawcy.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WYCENA ================= -->
+<section class="view" id="v-wycena" hidden>
+  <div class="head-row">
+    <div>
+      <h1>Kalkulator wyceny</h1>
+      <p class="lead">Płyty i kant przychodzą z rozkroju. Dopisz okucia i robociznę, ustaw narzut i zobacz cenę dla klienta oraz swój zarobek.</p>
+    </div>
+  </div>
+  <div class="quote-layout">
+    <div style="display:flex;flex-direction:column;gap:22px;min-width:0">
+      <div class="panel">
+        <div class="panel-head"><h2>Materiały <span class="auto-tag">z rozkroju</span></h2></div>
+        <div class="table-scroll"><table class="list q" id="q-mat"></table></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2>Okucia i akcesoria</h2><button class="btn" id="btn-addhw">+ Pozycja</button></div>
+        <div class="table-scroll"><table class="list q" id="q-hw"></table></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2>Praca i usługi</h2></div>
+        <div class="table-scroll"><table class="list q" id="q-lab"></table></div>
+      </div>
+    </div>
+    <div class="panel sticky">
+      <h2 style="margin-bottom:16px">Podsumowanie</h2>
+      <div class="grid g2" style="margin-bottom:14px">
+        <label class="field"><span class="label">Narzut %</span><input class="in mono" id="q-markup" inputmode="decimal"></label>
+        <label class="field"><span class="label">VAT</span>
+          <select class="in" id="q-vat"><option value="23">23%</option><option value="8">8% (mieszkaniowe)</option><option value="0">zw. / 0%</option></select></label>
+      </div>
+      <div id="q-sum"></div>
+      <div class="btn-row" style="margin-top:18px"><a class="btn primary" href="#oferta">Przygotuj ofertę →</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= OFERTA ================= -->
+<section class="view" id="v-oferta" hidden>
+  <div class="head-row">
+    <div>
+      <h1>Oferta dla klienta</h1>
+      <p class="lead">Kwoty pochodzą z kalkulatora. Klient widzi zakres i cenę, bez Twoich narzutów i cen zakupu.</p>
+    </div>
+    <div class="btn-row">
+      <button class="btn" id="btn-offer-copy">Kopiuj jako tekst</button>
+      <button class="btn primary" id="btn-offer-img">Zapisz jako obraz</button>
+    </div>
+  </div>
+  <div class="offer-layout">
+    <div class="panel">
+      <div class="form-sec">
+        <h3>Twoja firma</h3>
+        <label class="field"><span class="label">Nazwa</span><input class="in" data-o="co.name"></label>
+        <label class="field"><span class="label">Adres</span><input class="in" data-o="co.addr"></label>
+        <div class="grid g2">
+          <label class="field"><span class="label">Telefon</span><input class="in" data-o="co.phone"></label>
+          <label class="field"><span class="label">E-mail</span><input class="in" data-o="co.email"></label>
+        </div>
+        <label class="field"><span class="label">NIP</span><input class="in" data-o="co.nip"></label>
+        <div class="btn-row" style="align-items:center">
+          <label class="btn" for="o-logo">Wgraj logo</label><input type="file" id="o-logo" accept="image/*" hidden>
+          <button class="btn ghost" id="o-logo-rm" hidden>Usuń logo</button>
+        </div>
+      </div>
+      <div class="form-sec">
+        <h3>Klient i projekt</h3>
+        <label class="field"><span class="label">Klient</span><input class="in" data-o="cl.name"></label>
+        <label class="field"><span class="label">Adres / kontakt</span><input class="in" data-o="cl.addr"></label>
+        <label class="field"><span class="label">Nazwa projektu</span><input class="in" data-o="title"></label>
+        <label class="field"><span class="label">Zakres prac (każda linia to punkt)</span><textarea class="in" data-o="scope" rows="6"></textarea></label>
+        <div class="btn-row" style="align-items:center">
+          <label class="btn" for="o-img">Dodaj wizualizację</label><input type="file" id="o-img" accept="image/*" hidden>
+          <button class="btn ghost" id="o-img-rm" hidden>Usuń zdjęcie</button>
+        </div>
+      </div>
+      <div class="form-sec">
+        <h3>Warunki</h3>
+        <div class="grid g2">
+          <label class="field"><span class="label">Numer oferty</span><input class="in mono" data-o="num"></label>
+          <label class="field"><span class="label">Data</span><input class="in mono" type="date" data-o="date"></label>
+          <label class="field"><span class="label">Ważna (dni)</span><input class="in mono" data-o="valid" inputmode="numeric"></label>
+          <label class="field"><span class="label">Zaliczka %</span><input class="in mono" data-o="deposit" inputmode="numeric"></label>
+          <label class="field" style="grid-column:1/-1"><span class="label">Termin realizacji</span><input class="in" data-o="lead"></label>
+        </div>
+        <label class="field"><span class="label">Uwagi</span><textarea class="in" data-o="notes" rows="3"></textarea></label>
+      </div>
+      <div class="form-sec">
+        <h3>Wygląd</h3>
+        <div class="field"><span class="label">Pozycje w ofercie</span>
+          <div class="seg" id="o-mode"><button data-mode="grouped">Grupy</button><button data-mode="single">Jedna kwota</button></div></div>
+        <div class="field"><span class="label">Kolor</span><div class="colors" id="o-colors"></div></div>
+      </div>
+    </div>
+    <div class="paper-wrap"><div id="paper"></div></div>
+  </div>
+</section>
+</main>
+
+<div class="modal" id="modal" hidden>
+  <div class="modal-box">
+    <div class="panel-head" style="margin:0"><h2>Oferta jako obraz</h2><button class="btn" id="modal-close">Zamknij</button></div>
+    <p class="small muted" style="margin:0">Kliknij obraz prawym przyciskiem i wybierz „Zapisz obraz jako…” (na telefonie przytrzymaj palec). Możesz go też skopiować i wkleić do wiadomości.</p>
+    <img id="modal-img" alt="Podgląd oferty">
+  </div>
+</div>
+
+<div class="modal" id="pj-modal" hidden>
+  <form class="modal-box" id="pj-form" style="max-width:580px" autocomplete="off">
+    <h2 id="pf-title">Nowe zlecenie</h2>
+    <div class="grid g2">
+      <label class="field" style="grid-column:1/-1"><span class="label">Nazwa realizacji</span><input class="in" id="pf-name" required placeholder="np. Kuchnia na Klonowej"></label>
+      <label class="field"><span class="label">Rodzaj</span><select class="in" id="pf-type"></select></label>
+      <label class="field"><span class="label">Status</span><select class="in" id="pf-status"></select></label>
+      <label class="field"><span class="label">Klient</span><input class="in" id="pf-client" placeholder="Imię i nazwisko / firma"></label>
+      <label class="field"><span class="label">Telefon</span><input class="in" id="pf-phone" inputmode="tel"></label>
+      <label class="field" style="grid-column:1/-1"><span class="label">Adres montażu</span><input class="in" id="pf-addr"></label>
+      <label class="field"><span class="label">Termin montażu</span><input class="in mono" type="date" id="pf-due"></label>
+      <label class="field" style="grid-column:1/-1"><span class="label">Notatki</span><textarea class="in" id="pf-notes" rows="3" placeholder="Ustalenia z klientem, uwagi z pomiaru…"></textarea></label>
+    </div>
+    <div class="btn-row" style="justify-content:flex-end"><button type="button" class="btn ghost" id="pf-cancel">Anuluj</button><button type="submit" class="btn primary" id="pf-submit">Utwórz i otwórz</button></div>
+  </form>
+</div>
+
+<script>
+(function(){
+'use strict';
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const uid=()=>Math.random().toString(36).slice(2,9);
+const num=v=>{const n=parseFloat(String(v).replace(',','.').replace(/\s/g,''));return isFinite(n)?n:0};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=(n,d=0)=>Number(n||0).toLocaleString('pl-PL',{minimumFractionDigits:d,maximumFractionDigits:d});
+const zl=n=>fmt(n,2)+' zł';
+const mm=n=>fmt(Math.round(n*10)/10,(Math.round(n*10)%10)?1:0);
+const dec=n=>String(n).replace('.',',');
+const opts=(list,cur,suffix='')=>list.map(v=>`<option value="${v}" ${num(v)===num(cur)?'selected':''}>${dec(v)}${suffix}</option>`).join('');
+const KEY='formatka.v3', OLD='formatka.v2';
+function isoToday(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function addDaysISO(n){const d=new Date();d.setDate(d.getDate()+n);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+
+/* Stały format arkusza i wartości rynkowe */
+const BW=2800, BH=2070;
+const KERFS=[3,3.2,3.5,4,4.4,4.8,5];
+const EDGE_TH=[0.4,0.5,0.6,0.8,1,1.3,2];
+const BOARD_T=[8,10,12,16,18,19,22,25,28,36];
+const TRIMS=[0,5,8,10,12,15,20];
+const EDGE_ADD=[0,20,30,40,50];
+const GAPS=[2,2.5,3,3.5,4];
+const SLIDES={
+  kulkowe:{label:'kulkowe',clear:26,short:0,price:35},
+  rolkowe:{label:'rolkowe',clear:25,short:0,price:18},
+  pod:{label:'podszufladowe',clear:10,short:10,price:160}
+};
+const SLIDE_LEN=[250,270,300,350,400,450,500,550,600,650];
+const OFFER_COLORS=[['#2b2620','grafit'],['#7a5a2e','orzech'],['#1d3a4f','granat'],['#2c4a3a','butelkowa zieleń']];
+
+function sample(){
+  const white='m'+uid(), oak='m'+uid();
+  const P=(name,l,w,qty,mat,e)=>({id:uid(),name,l,w,qty,mat,e});
+  return {
+    id:uid(),
+    meta:{name:'Zabudowa kuchenna',client:'Jan Kowalski',phone:'500 000 000',addr:'ul. Klonowa 5, Miasto',type:'Kuchnia',status:'wycena',due:addDaysISO(30),created:isoToday(),notes:'Przykładowe zlecenie – możesz je usunąć.'},
+    example:true,
+    mats:[
+      {id:white,name:'Biały gładki',t:18,price:165,grain:false},
+      {id:oak,name:'Dąb naturalny',t:18,price:245,grain:true}
+    ],
+    set:{kerf:4,trim:10,edgeAdd:30,sub:'thick',glue:2.5},
+    edges:[{th:0.8,price:1.4}],
+    parts:[
+      P('Bok szafki dolnej',720,560,4,white,[1,0,0,0]),
+      P('Wieniec dolny',564,560,2,white,[1,0,0,0]),
+      P('Trawers',564,100,4,white,[1,0,0,0]),
+      P('Półka dolna',562,500,2,white,[1,0,0,0]),
+      P('Bok szafki górnej',720,300,4,white,[1,0,1,1]),
+      P('Wieniec górny',564,300,4,white,[1,0,0,0]),
+      P('Półka górna',562,280,4,white,[1,0,0,0]),
+      P('Front dolny',715,297,4,oak,[1,1,1,1]),
+      P('Front górny',717,297,4,oak,[1,1,1,1])
+    ],
+    dr:{W:600,H:720,D:510,t:18,n:3,ratio:'1:1:2',type:'kulkowe',slide:'auto',clear:26,side:16,reserve:40,gap:3,bottom:'hdf_pod',boxMat:white,frontMat:oak},
+    q:{markup:20,vat:23,cut:22,hw:[
+      {id:uid(),name:'Zawias puszkowy z cichym domykiem',qty:16,price:11},
+      {id:uid(),name:'Uchwyt meblowy 160 mm',qty:8,price:18},
+      {id:uid(),name:'Nóżka regulowana z zaczepem cokołu',qty:8,price:3.5},
+      {id:uid(),name:'Zawieszka szafki górnej (para)',qty:2,price:9}
+    ],shopH:14,shopRate:90,montH:6,montRate:110,transport:250,other:0},
+    o:{co:{name:'Stolarnia – Twoja nazwa',addr:'ul. Warsztatowa 12, 00-000 Miasto',phone:'600 000 000',email:'biuro@twojafirma.pl',nip:'000-000-00-00'},
+      cl:{name:'Jan Kowalski',addr:'ul. Klonowa 5, Miasto · 500 000 000'},
+      title:'Zabudowa kuchenna',
+      scope:'Szafki dolne i górne z płyty 18 mm, krawędzie oklejone ABS\nFronty dąb naturalny, krawędzie oklejone\nOkucia z cichym domykiem\nTransport, wniesienie i montaż u klienta',
+      num:'', date:'', valid:14, deposit:50, lead:'4–6 tygodni od wpłaty zaliczki',
+      notes:'Cena nie obejmuje blatu, AGD ani prac hydraulicznych i elektrycznych.',
+      mode:'grouped', color:'#2b2620'}
+  };
+}
+
+/* Baza: lista zleceń + wspólne dane firmy. S = otwarte zlecenie */
+let DB=null;
+try{DB=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){DB=null}
+if(!DB||!Array.isArray(DB.projects)||!DB.projects.length){
+  let old=null;try{old=JSON.parse(localStorage.getItem(OLD)||'null')}catch(e){}
+  const first=(old&&old.mats)?old:sample();
+  DB={projects:[first],active:null,co:first.o.co,fresh:!(old&&old.mats)};
+}
+if(!Array.isArray(DB.deleted))DB.deleted=[];
+function normProject(p){
+  if(!p.id)p.id=uid();
+  if(!p.meta)p.meta={name:p.o?.title||'Zlecenie',client:p.o?.cl?.name||'',phone:'',addr:p.o?.cl?.addr||'',type:'Kuchnia',status:'wycena',due:'',created:isoToday(),notes:''};
+  if(p.set.glue==null)p.set.glue=2.5;
+  p.set.kerf=4; // rzaz piły stały – standard hurtowni
+  if(!p.edges||!p.edges.length)p.edges=[{th:0.8,price:1.4}];
+  if(!p.sz)p.sz=defaultSz(p);
+  p.o.co=DB.co;
+}
+DB.projects.forEach(normProject);
+let S=DB.projects.find(p=>p.id===DB.active)||DB.projects[0];
+DB.active=S.id;
+let IMG={logo:null,img:null};
+try{IMG.logo=localStorage.getItem(KEY+'.logo')||localStorage.getItem(OLD+'.logo');IMG.img=localStorage.getItem(KEY+'.img.'+S.id)}catch(e){}
+function offerDefaults(){const d=new Date();
+  if(!S.o.date)S.o.date=d.toISOString().slice(0,10);
+  if(!S.o.num)S.o.num=`OF/${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/01`;}
+
+let saveT;
+function localSave(){clearTimeout(saveT);saveT=setTimeout(()=>{
+  try{S.cache={gross:quoteCalc().gross}}catch(e){}
+  try{localStorage.setItem(KEY,JSON.stringify(DB))}catch(e){}
+},300)}
+// zmiana w otwartym zleceniu: zapis lokalny + kolejka do chmury
+function save(){markDirty(S);localSave()}
+const imgKey=k=>k==='logo'?KEY+'.logo':KEY+'.img.'+S.id;
+function saveImg(k){
+  try{IMG[k]?localStorage.setItem(imgKey(k),IMG[k]):localStorage.removeItem(imgKey(k))}catch(e){}
+  cloudImg(k);
+}
+
+/* ---------- Chmura: konto Claude + prywatne dane użytkownika ---------- */
+const CLOUD={db:null,col:null,ready:false};
+let ME=null,flushT=null,flushing=false,settingsDirty=false;
+const dirty=new Set();
+function markDirty(p){if(!p)return;p.updatedAt=Date.now();DB.fresh=false;dirty.add(p.id);scheduleFlush()}
+function markSettings(){DB.coUpdatedAt=Date.now();settingsDirty=true;scheduleFlush()}
+function scheduleFlush(ms=1200){if(!CLOUD.ready)return;clearTimeout(flushT);flushT=setTimeout(flush,ms);setSync('saving')}
+function serialize(p){const c=JSON.parse(JSON.stringify(p,(k,v)=>k==='co'?undefined:v));delete c.synced;return c}
+async function flush(){
+  if(!CLOUD.ready)return;
+  if(flushing){scheduleFlush();return}
+  flushing=true;let cur=null;
+  try{
+    for(const pid of [...DB.deleted]){cur={del:pid};await CLOUD.col.doc('p_'+pid).delete();await CLOUD.col.doc('img_'+pid).delete();DB.deleted=DB.deleted.filter(x=>x!==pid)}
+    for(const pid of [...dirty]){
+      dirty.delete(pid);cur=pid;
+      const p=DB.projects.find(x=>x.id===pid);if(!p)continue;
+      await CLOUD.col.doc('p_'+pid).set(serialize(p));p.synced=true;
+    }
+    cur='settings';
+    if(settingsDirty){settingsDirty=false;await CLOUD.col.doc('settings').set({co:DB.co,updatedAt:DB.coUpdatedAt||Date.now()})}
+    setSync('ok');
+  }catch(e){
+    const code=e&&e.code;
+    if(typeof cur==='string'&&cur!=='settings')dirty.add(cur);else if(cur==='settings')settingsDirty=true;
+    if(code==='quota_exceeded')setSync('error','Brak miejsca w chmurze');
+    else if(code==='invalid_argument')setSync('error','Chmura odrzuciła zapis');
+    else if(code==='revoked'||code==='not_granted'||code==='capability_disabled'||code==='capability_removed'){CLOUD.ready=false;setSync('local')}
+    else{setSync('offline');setTimeout(()=>scheduleFlush(0),5000)}
+  }finally{flushing=false;localSave()}
+}
+function cloudImg(k){
+  if(!CLOUD.ready)return;
+  const ref=CLOUD.col.doc(k==='logo'?'logo':'img_'+S.id);
+  (IMG[k]?ref.set({data:IMG[k],updatedAt:Date.now()}):ref.delete())
+    .catch(e=>{if(e&&e.code==='invalid_argument')toast('Obraz jest za duży, by zapisać go w chmurze')});
+}
+function cloudDelete(pid){if(!DB.deleted.includes(pid))DB.deleted.push(pid);dirty.delete(pid);scheduleFlush(300)}
+function setSync(st,msg){
+  const T={local:['Tylko na tym urządzeniu','var(--muted)'],connecting:['Łączenie z chmurą…','var(--muted)'],slow:['Chmura nie odpowiada','var(--warn)'],
+    saving:['Zapisywanie…','var(--accent)'],ok:['Zapisano w chmurze','var(--ok)'],offline:['Brak połączenia – zapis lokalny','var(--warn)'],error:[msg||'Błąd zapisu','var(--bad)']}[st]||['','var(--muted)'];
+  const el=$('#acct');if(!el)return;
+  el.style.setProperty('--sc',T[1]);$('#sync-t').textContent=T[0];el.title=T[0];
+}
+function renderAccount(){
+  const av=$('#acct-av'),note=$('#acct-note');
+  if(ME&&ME.id){av.src=ME.avatarUrl;av.hidden=false;av.alt=ME.name||'Konto';}
+  if(!note)return;note.textContent='';
+  if(ME&&ME.id){
+    note.append('Zalogowano jako ');const b=document.createElement('b');b.textContent=ME.name||'Ty';note.append(b);
+    note.append('. Zlecenia zapisują się w chmurze na Twoim koncie i widzisz je tylko Ty, na każdym urządzeniu, na którym otworzysz tę stronę.');
+  }else note.append('Zlecenia zapisują się tylko w tej przeglądarce. Zaloguj się do Claude, żeby zapisywać je w chmurze i mieć je na każdym urządzeniu.');
+}
+function applyRemoteProject(d){
+  const data=JSON.parse(JSON.stringify(d));data.o=data.o||{};data.synced=true;normProject(data);
+  if(DB.deleted.includes(data.id))return null;
+  const i=DB.projects.findIndex(p=>p.id===data.id);
+  if(i<0){DB.projects.push(data);return 'other'}
+  const loc=DB.projects[i];
+  if((data.updatedAt||0)<=(loc.updatedAt||0)||dirty.has(loc.id)){loc.synced=true;return null}
+  DB.projects[i]=data;
+  if(loc===S){S=data;return 'active'}
+  return 'other';
+}
+function applyDoc(id,d){
+  if(!d)return null;
+  if(id.startsWith('p_'))return applyRemoteProject(d);
+  if(id==='settings'){
+    if((d.updatedAt||0)>(DB.coUpdatedAt||0)&&!settingsDirty&&d.co){Object.assign(DB.co,d.co);DB.coUpdatedAt=d.updatedAt;return 'other'}
+    return null;
+  }
+  if(id==='logo'){if(d.data!==IMG.logo){IMG.logo=d.data||null;try{localStorage.setItem(KEY+'.logo',IMG.logo||'')}catch(e){}return 'other'}return null}
+  if(id.startsWith('img_')){
+    const pid=id.slice(4);try{localStorage.setItem(KEY+'.img.'+pid,d.data||'')}catch(e){}
+    if(pid===S.id&&d.data!==IMG.img){IMG.img=d.data||null;return 'other'}
+    return null;
+  }
+  return null;
+}
+function reconcile(docs){
+  const cloudP=docs.filter(d=>d.id.startsWith('p_'));
+  if(DB.fresh&&cloudP.length)DB.projects=[]; // nowe urządzenie: bierzemy zlecenia z chmury zamiast przykładu
+  DB.fresh=false;
+  docs.forEach(d=>applyDoc(d.id,d.data()));
+  const ids=new Set(cloudP.map(d=>d.id.slice(2)));
+  // zsynchronizowane wcześniej, a nie ma ich w chmurze = usunięte na innym urządzeniu
+  DB.projects=DB.projects.filter(p=>ids.has(p.id)||!p.synced);
+  DB.projects.forEach(p=>{
+    const remote=cloudP.find(d=>d.id==='p_'+p.id);
+    if(!remote||(p.updatedAt||0)>(remote.data().updatedAt||0)){
+      if(!p.updatedAt)p.updatedAt=Date.now();dirty.add(p.id);
+      if(!remote){try{const im=localStorage.getItem(KEY+'.img.'+p.id);if(im)CLOUD.col.doc('img_'+p.id).set({data:im,updatedAt:Date.now()}).catch(()=>{})}catch(e){}}
+    }
+  });
+  if(!docs.some(d=>d.id==='settings'))settingsDirty=true;
+  if(!docs.some(d=>d.id==='logo')&&IMG.logo)CLOUD.col.doc('logo').set({data:IMG.logo,updatedAt:Date.now()}).catch(()=>{});
+  if(!DB.projects.length){const p=sample();p.o.co=DB.co;DB.projects.push(p);dirty.add(p.id)}
+  S=DB.projects.find(p=>p.id===DB.active)||DB.projects[0];DB.active=S.id;
+  try{IMG.img=localStorage.getItem(KEY+'.img.'+S.id)||null}catch(e){}
+  NEST=null;initAll(true);
+  if(dirty.size||settingsDirty||DB.deleted.length)scheduleFlush(300);else setSync('ok');
+}
+function onCloud(snap){
+  if(!CLOUD.ready){
+    if(snap.metadata.fromCache)return;
+    CLOUD.ready=true;reconcile(snap.docs);return;
+  }
+  let any=false,active=false;
+  for(const ch of snap.docChanges()){
+    if(ch.doc.metadata&&ch.doc.metadata.hasPendingWrites)continue;
+    const id=ch.doc.id;
+    if(ch.type==='removed'){
+      if(snap.metadata.fromCache||!id.startsWith('p_'))continue;
+      const p=DB.projects.find(x=>x.id===id.slice(2));
+      if(p&&!dirty.has(p.id)){
+        DB.projects=DB.projects.filter(x=>x!==p);any=true;
+        if(!DB.projects.length){const n=sample();n.o.co=DB.co;DB.projects.push(n);dirty.add(n.id)}
+        if(p===S){S=DB.projects[0];DB.active=S.id;active=true}
+      }
+      continue;
+    }
+    const r=applyDoc(id,ch.doc.data());
+    if(r)any=true;if(r==='active')active=true;
+  }
+  if(active){NEST=null;initAll(true)}
+  else if(any){const t=location.hash.slice(1);if(t==='projekty'||!t)renderProjects();if(t==='oferta')renderOffer();updatePill();localSave()}
+}
+async function cloudInit(){
+  const c=(typeof claude!=='undefined'&&claude&&typeof claude.use==='function')?claude:null;
+  if(!c){setSync('local');renderAccount();return}
+  setSync('connecting');
+  let user=null,db=null;
+  try{[user,db]=await Promise.all([c.use('user'),c.use('db')])}catch(e){}
+  ME=user?await user.me():null;
+  renderAccount();
+  if(!db||!ME||!ME.id){setSync('local');return}
+  CLOUD.db=db;CLOUD.col=db.collection('data/users/'+ME.id);
+  const timer=setTimeout(()=>{if(!CLOUD.ready)setSync('slow')},10000);
+  CLOUD.col.onSnapshot(snap=>{if(!snap.metadata.fromCache)clearTimeout(timer);onCloud(snap)},
+    err=>{clearTimeout(timer);CLOUD.ready=false;setSync(err&&err.code==='revoked'?'local':'offline')});
+}
+function toast(msg){const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2400)}
+function copyText(txt,okMsg){
+  const fallback=()=>{const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast(okMsg)}catch(e){toast('Zaznaczono tekst – skopiuj Ctrl+C')}setTimeout(()=>ta.remove(),50)};
+  try{navigator.clipboard.writeText(txt).then(()=>toast(okMsg),fallback)}catch(e){fallback()}
+}
+const matById=id=>S.mats.find(m=>m.id===id)||S.mats[0];
+const matName=m=>`${m.name} ${dec(m.t)} mm`;
+const edgeLabel=i=>`Kant ${dec(S.edges[i].th)} mm`;
+
+/* ---------- Zakładki ---------- */
+const TABS=['projekty','rozkroj','szuflady','szafa','wycena','oferta'];
+function showTab(t){
+  if(!TABS.includes(t))t='projekty';
+  if(t==='projekty')renderProjects();
+  TABS.forEach(x=>{$('#v-'+x).hidden=x!==t});
+  $$('nav.tabs a').forEach(a=>{if(a.dataset.tab===t)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
+  if(t==='wycena')renderQuote();
+  if(t==='oferta')renderOffer();
+  if(t==='szuflady')renderDrawer();
+  if(t==='szafa')renderWardrobe();
+}
+window.addEventListener('hashchange',()=>{showTab(location.hash.slice(1));window.scrollTo(0,0)});
+
+/* ---------- Geometria ---------- */
+// Wymiar formatki = wymiar gotowy; hurtownia frezuje wstępnie przed oklejaniem
+function cutDims(p){return {cl:num(p.l), cw:num(p.w)}}
+// Rozkrój gilotynowy: każde cięcie przechodzi przez cały kawałek – da się to przeciąć na pile formatowej
+function guillotine(items,W,H,k,rule,fit){
+  const bins=[],unplaced=[];
+  for(const it of items){
+    const w=it.w+k,h=it.h+k;let ok=false;
+    for(const b of bins){if(place(b,it,w,h,k,rule,fit)){ok=true;break}}
+    if(!ok){const b={free:[{x:0,y:0,w:W,h:H}],pl:[],area:0};
+      if(place(b,it,w,h,k,rule,fit))bins.push(b);else unplaced.push(it)}
+  }
+  return {bins,unplaced,last:bins.length?bins[bins.length-1].area:0};
+}
+function place(b,it,w,h,k,rule,fit){
+  let best=null;
+  b.free.forEach((f,i)=>{
+    const o=[[w,h,false]];if(it.rot&&w!==h)o.push([h,w,true]);
+    for(const [ww,hh,r] of o){
+      if(ww<=f.w+1e-6&&hh<=f.h+1e-6){
+        const sc=fit==='baf'?f.w*f.h-ww*hh:Math.min(f.w-ww,f.h-hh);
+        const sc2=Math.max(f.w-ww,f.h-hh);
+        if(!best||sc<best.sc||(sc===best.sc&&sc2<best.sc2))best={i,ww,hh,r,sc,sc2};
+      }
+    }
+  });
+  if(!best)return false;
+  const f=b.free.splice(best.i,1)[0],{ww,hh}=best,lw=f.w-ww,lh=f.h-hh;
+  let horiz;
+  if(rule==='slas')horiz=lw<=lh;else if(rule==='llas')horiz=lw>lh;else if(rule==='minas')horiz=ww*lh>lw*hh;else horiz=ww*lh<=lw*hh;
+  const A=horiz?{x:f.x,y:f.y+hh,w:f.w,h:lh}:{x:f.x+ww,y:f.y,w:lw,h:f.h};
+  const B=horiz?{x:f.x+ww,y:f.y,w:lw,h:hh}:{x:f.x,y:f.y+hh,w:ww,h:lh};
+  if(A.w>0&&A.h>0)b.free.push(A);if(B.w>0&&B.h>0)b.free.push(B);
+  b.pl.push({x:f.x,y:f.y,w:ww-k,h:hh-k,rot:best.r,it});
+  b.area+=(ww-k)*(hh-k);
+  return true;
+}
+const SORTS=[(a,b)=>b.w*b.h-a.w*a.h,(a,b)=>Math.max(b.w,b.h)-Math.max(a.w,a.h),(a,b)=>(b.w+b.h)-(a.w+a.h),(a,b)=>b.h-a.h||b.w-a.w,(a,b)=>b.w-a.w||b.h-a.h];
+function packBest(items){
+  const k=num(S.set.kerf),t=num(S.set.trim),W=BW-2*t+k,H=BH-2*t+k;
+  let best=null;
+  for(const so of SORTS)for(const ru of ['slas','llas','minas','maxas'])for(const fi of ['baf','bssf']){
+    const r=guillotine([...items].sort(so),W,H,k,ru,fi);
+    if(!best||r.unplaced.length<best.unplaced.length||(r.unplaced.length===best.unplaced.length&&(r.bins.length<best.bins.length||(r.bins.length===best.bins.length&&r.last<best.last))))best=r;
+  }
+  return best;
+}
+function edgeMeters(){
+  const add=num(S.set.edgeAdd),m=Array(S.edges.length+1).fill(0);
+  for(const p of S.parts){const q=num(p.qty);p.e.forEach((v,i)=>{if(v&&v<m.length)m[v]+=(((i<2)?num(p.l):num(p.w))+add)*q/1000})}
+  return m;
+}
+let NEST=null;
+function nestAll(){
+  const out={mats:[],unplaced:[],partArea:0,boardArea:0,boards:0};
+  S.parts.forEach((p,i)=>{p._n=i+1});
+  for(const m of S.mats){
+    const items=[];
+    for(const p of S.parts){
+      if(p.mat!==m.id)continue;
+      const {cl,cw}=cutDims(p);if(cl<=0||cw<=0)continue;
+      for(let k=0;k<Math.min(500,Math.floor(num(p.qty)));k++)items.push({p,w:cl,h:cw,rot:!m.grain});
+    }
+    if(!items.length)continue;
+    const r=packBest(items);
+    const pa=r.bins.reduce((s,b)=>s+b.area,0),ba=r.bins.length*BW*BH;
+    out.mats.push({m,bins:r.bins,unplaced:r.unplaced,pa,ba});
+    out.unplaced.push(...r.unplaced);out.partArea+=pa;out.boardArea+=ba;out.boards+=r.bins.length;
+  }
+  return out;
+}
+
+/* ---------- Rozkrój: panel ---------- */
+function renderMats(){
+  $('#mats').innerHTML=S.mats.map(m=>`
+    <div class="mat-card" data-id="${m.id}">
+      <div class="mat-top"><input class="in" data-m="name" value="${esc(m.name)}" aria-label="Nazwa dekoru">
+        ${S.mats.length>1?`<button class="iconbtn" data-act="delmat" aria-label="Usuń dekor">×</button>`:''}</div>
+      <div class="grid g2">
+        <label class="field"><span class="label">Grubość</span><select class="in mono" data-m="t">${opts(BOARD_T,m.t,' mm')}</select></label>
+        <label class="field"><span class="label">Cena arkusza</span><input class="in mono" data-m="price" value="${m.price}" inputmode="decimal"></label>
+      </div>
+      <label class="check small"><input type="checkbox" data-m="grain" ${m.grain?'checked':''}> Ma słoje – nie obracaj formatek</label>
+    </div>`).join('');
+}
+const MAX_EDGES=5;
+const thickIdx=()=>S.edges.reduce((b,e,i)=>num(e.th)>num(S.edges[b-1].th)?i+1:b,1);
+function renderSettings(){
+  $('#s-trim').innerHTML=opts(TRIMS,S.set.trim,' mm');
+  $('#s-edgeAdd').innerHTML=opts(EDGE_ADD,S.set.edgeAdd,' mm');
+  $('#s-glue').value=S.set.glue;
+  $('#edge-types').innerHTML=S.edges.map((e,i)=>`
+    <div class="edge-row" data-i="${i}" style="grid-template-columns:14px minmax(0,1fr) minmax(0,1fr) ${S.edges.length>1?'30px':''}">
+      <span class="dot" style="background:var(--k${i+1})"></span>
+      <label class="field"><span class="label">Kant ${i+1} – grubość</span><select class="in mono" data-e="th">${opts(EDGE_TH,e.th,' mm')}</select></label>
+      <label class="field"><span class="label">Cena zł / mb</span><input class="in mono" data-e="price" value="${e.price}" inputmode="decimal"></label>
+      ${S.edges.length>1?`<button class="iconbtn" data-act="deledge" aria-label="Usuń kant ${i+1}" style="margin-bottom:4px">×</button>`:''}
+    </div>`).join('');
+  $('#btn-addedge').hidden=S.edges.length>=MAX_EDGES;
+  updateLegend();
+}
+function updateLegend(){
+  $('#legend').innerHTML=S.edges.map((e,i)=>`<span><i style="background:var(--k${i+1});${num(e.th)>=1?'height:6px':''}"></i>${edgeLabel(i)}</span>`).join('');
+}
+function ewHTML(e){
+  const c=['t','b','l','r'],tip=['dłuższy bok 1','dłuższy bok 2','krótszy bok 1','krótszy bok 2'];
+  const hv=v=>v&&num(S.edges[v-1]?.th)>=1?' hv':'';
+  return `<div class="ew">${c.map((s,i)=>`<button class="s ${s} e${e[i]}${hv(e[i])}" data-side="${i}" title="${tip[i]}" aria-label="Kant: ${tip[i]}"></button>`).join('')}<span class="core" data-side="all" title="Wszystkie boki">${e.filter(Boolean).length||''}</span></div>`;
+}
+function rowHTML(p,i){
+  return `<tr data-id="${p.id}">
+    <td class="num">${i+1}</td>
+    <td><input class="in" data-k="name" value="${esc(p.name)}" aria-label="Nazwa"></td>
+    <td><input class="in dim" data-k="l" value="${p.l}" inputmode="decimal" aria-label="Długość"></td>
+    <td><input class="in dim" data-k="w" value="${p.w}" inputmode="decimal" aria-label="Szerokość"></td>
+    <td><input class="in qty" data-k="qty" value="${p.qty}" inputmode="numeric" aria-label="Ilość"></td>
+    <td><select class="in" data-k="mat" aria-label="Dekor" style="min-width:140px">${S.mats.map(m=>`<option value="${m.id}" ${m.id===p.mat?'selected':''}>${esc(matName(m))}</option>`).join('')}</select></td>
+    <td>${ewHTML(p.e)}</td>
+    <td class="cut"></td>
+    <td><button class="iconbtn" data-act="del" aria-label="Usuń formatkę">×</button></td></tr>`;
+}
+function renderParts(){
+  $('#parts-body').innerHTML=S.parts.length?S.parts.map(rowHTML).join(''):`<tr><td colspan="9" class="muted" style="padding:26px 6px">Brak formatek. Kliknij „Dodaj formatkę”, żeby zacząć.</td></tr>`;
+  updateCutCells();
+}
+function updateCutCells(){
+  const t=num(S.set.trim),W=BW-2*t,H=BH-2*t;
+  $$('#parts-body tr[data-id]').forEach(tr=>{
+    const p=S.parts.find(x=>x.id===tr.dataset.id);if(!p)return;
+    const {cl,cw}=cutDims(p),m=matById(p.mat);
+    const fits=(cl<=W&&cw<=H)||(!m.grain&&cl<=H&&cw<=W);
+    tr.classList.toggle('bad',!fits&&cl>0);
+    tr.querySelector('.cut').innerHTML=(cl>0&&cw>0&&!fits)?'<span class="pill bad">za duża</span>':'';
+    tr.querySelector('.core').textContent=p.e.filter(Boolean).length||'';
+  });
+}
+function addPart(focus=true){
+  const last=S.parts[S.parts.length-1];
+  S.parts.push({id:uid(),name:'Formatka',l:'',w:'',qty:1,mat:last?last.mat:S.mats[0].id,e:[0,0,0,0]});
+  renderParts();save();
+  if(focus){const tr=$('#parts-body tr:last-child');tr&&tr.querySelector('[data-k="l"]').focus()}
+}
+let rT;
+function recalc(){clearTimeout(rT);rT=setTimeout(()=>{updateCutCells();renderResults();save()},120)}
+
+/* ---------- Rozkrój: wyniki ---------- */
+function renderResults(){
+  NEST=nestAll();
+  const em=edgeMeters();
+  const usage=NEST.boardArea?NEST.partArea/NEST.boardArea:0;
+  const emTot=em.slice(1).reduce((a,b)=>a+b,0);
+  const cost=NEST.mats.reduce((s,x)=>s+x.bins.length*num(x.m.price),0)+S.edges.reduce((s,e,i)=>s+em[i+1]*num(e.price),0)+emTot*num(S.set.glue);
+  const uc=usage>=.8?'ok':usage>=.6?'warn':'bad';
+  $('#kpis').innerHTML=`
+    <div><span class="label">Płyty 2800×2070</span><span class="v">${NEST.boards}<small>ark.</small></span><span class="sub">${NEST.mats.map(x=>`${x.bins.length} × ${esc(matName(x.m))}`).join('<br>')||'—'}</span></div>
+    <div><span class="label">Wykorzystanie</span><span class="v">${fmt(usage*100,0)}<small>%</small></span><div class="meter"><b style="width:${Math.min(100,usage*100)}%;background:var(--${uc})"></b></div><span class="sub">odpad ${fmt((NEST.boardArea-NEST.partArea)/1e6,2)} m²</span></div>
+    <div><span class="label">Kant</span><span class="v">${fmt(emTot,0)}<small>mb</small></span><span class="sub">${S.edges.map((e,i)=>`<span style="color:var(--k${i+1})">●</span> ${dec(e.th)} mm: ${fmt(em[i+1],1)} mb`).join('<br>')}</span></div>
+    <div><span class="label">Koszt materiału</span><span class="v">${fmt(cost)}<small>zł</small></span><span class="sub">płyty + kant + klejenie, netto</span></div>`;
+  $('#cut-warn').innerHTML=NEST.unplaced.length?`<div class="alert"><b>${NEST.unplaced.length} szt. nie mieści się na arkuszu:</b> ${[...new Set(NEST.unplaced.map(u=>`#${u.p._n} ${esc(u.p.name)}`))].join(', ')}. Sprawdź wymiary.</div>`:'';
+  $('#boards-out').innerHTML=NEST.mats.map(x=>{
+    const u=x.ba?x.pa/x.ba:0;
+    return `<div class="mat-block">
+      <div class="head-row"><h2>${esc(matName(x.m))}</h2><span class="small muted">${x.bins.length} ${x.bins.length===1?'arkusz':x.bins.length<5?'arkusze':'arkuszy'} · wykorzystanie ${fmt(u*100,0)}%${x.m.grain?' · słoje wzdłuż 2800':''}</span></div>
+      <div class="boards">${x.bins.map((b,i)=>boardSVG(b,i,x.bins.length)).join('')}</div></div>`;
+  }).join('');
+}
+function boardSVG(b,i,n){
+  const t=num(S.set.trim),sw=14;
+  let g='';
+  for(const pl of b.pl){
+    const x=pl.x+t,y=pl.y+t,p=pl.it.p,e=p.e;
+    const sd=pl.rot?{t:e[2],b:e[3],l:e[0],r:e[1]}:{t:e[0],b:e[1],l:e[2],r:e[3]};
+    g+=`<rect class="pp" x="${x}" y="${y}" width="${pl.w}" height="${pl.h}" stroke-width="4"><title>#${p._n} ${esc(p.name)} ${mm(num(p.l))}×${mm(num(p.w))}</title></rect>`;
+    const o=sw/2+4,L=(cls,x1,y1,x2,y2,v)=>`<line class="e${v}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke-width="${num(S.edges[v-1]?.th)>=1?sw*1.4:sw*.8}" stroke-linecap="round"/>`;
+    if(sd.t)g+=L('',x+o*2,y+o,x+pl.w-o*2,y+o,sd.t);
+    if(sd.b)g+=L('',x+o*2,y+pl.h-o,x+pl.w-o*2,y+pl.h-o,sd.b);
+    if(sd.l)g+=L('',x+o,y+o*2,x+o,y+pl.h-o*2,sd.l);
+    if(sd.r)g+=L('',x+pl.w-o,y+o*2,x+pl.w-o,y+pl.h-o*2,sd.r);
+    const cx=x+pl.w/2,cy=y+pl.h/2,dims=`${mm(num(p.l))}×${mm(num(p.w))}`;
+    const f=Math.min(78,pl.h/2.8,pl.w/(dims.length*0.62));
+    if(f>=22){
+      g+=`<text class="pnum" x="${cx}" y="${cy-f*0.1}" font-size="${f*1.2}" text-anchor="middle">${p._n}</text>`;
+      g+=`<text class="pdim" x="${cx}" y="${cy+f*1.05}" font-size="${f*0.78}" text-anchor="middle">${dims}</text>`;
+    }else{
+      const f2=Math.min(78,pl.h*0.65,pl.w*0.6);
+      if(f2>=12)g+=`<text class="pnum" x="${cx}" y="${cy+f2*0.36}" font-size="${f2}" text-anchor="middle">${p._n}</text>`;
+    }
+  }
+  const u=b.area/(BW*BH);
+  const cnt={};b.pl.forEach(pl=>{const p=pl.it.p;cnt[p.id]=cnt[p.id]||{p,n:0};cnt[p.id].n++});
+  return `<figure class="board">
+    <div class="board-head"><b>Arkusz ${i+1} <span class="muted" style="font-size:15px">/ ${n}</span></b><span class="pill ${u>=.8?'ok':u>=.6?'warn':'bad'}">${fmt(u*100,0)}%</span></div>
+    <svg viewBox="0 0 ${BW} ${BH}" role="img" aria-label="Arkusz ${i+1}: ${b.pl.length} formatek, wykorzystanie ${fmt(u*100,0)}%">
+      <rect class="sheet" x="0" y="0" width="${BW}" height="${BH}"/>${g}</svg>
+    <div class="board-list">${Object.values(cnt).sort((a,b)=>a.p._n-b.p._n).map(c=>`<span><b>${c.p._n}</b>${esc(c.p.name)} · ${c.n} szt.</span>`).join('')}</div></figure>`;
+}
+
+/* zdarzenia: panel */
+$('#mats').addEventListener('input',e=>{
+  const el=e.target,card=el.closest('.mat-card');if(!card)return;
+  const m=S.mats.find(x=>x.id===card.dataset.id),k=el.dataset.m;
+  if(k==='grain')m.grain=el.checked;else if(k==='name')m.name=el.value;else m[k]=num(el.value);
+  $$('#parts-body select[data-k="mat"] option[value="'+m.id+'"]').forEach(o=>o.textContent=matName(m));
+  recalc();
+});
+$('#mats').addEventListener('click',e=>{
+  if(e.target.dataset.act!=='delmat')return;
+  const id=e.target.closest('.mat-card').dataset.id;
+  S.mats=S.mats.filter(m=>m.id!==id);
+  S.parts.forEach(p=>{if(p.mat===id)p.mat=S.mats[0].id});
+  renderMats();renderParts();recalc();
+});
+$('#btn-addmat').onclick=()=>{S.mats.push({id:'m'+uid(),name:'Nowy dekor',t:18,price:170,grain:false});renderMats();renderParts();save()};
+['trim','edgeAdd'].forEach(k=>$('#s-'+k).addEventListener('change',e=>{S.set[k]=num(e.target.value);recalc()}));
+$('#s-glue').addEventListener('input',e=>{S.set.glue=num(e.target.value);recalc()});
+$('#edge-types').addEventListener('input',e=>{
+  const el=e.target,i=+el.closest('.edge-row').dataset.i;
+  S.edges[i][el.dataset.e]=num(el.value);updateLegend();
+  if(el.dataset.e==='th')renderParts();
+  recalc();
+});
+$('#edge-types').addEventListener('click',e=>{
+  if(e.target.dataset.act!=='deledge')return;
+  const n=+e.target.closest('.edge-row').dataset.i+1;
+  S.edges.splice(n-1,1);
+  S.parts.forEach(p=>{p.e=p.e.map(v=>v===n?0:v>n?v-1:v)});
+  renderSettings();renderParts();recalc();
+});
+$('#btn-addedge').onclick=()=>{
+  if(S.edges.length>=MAX_EDGES)return;
+  const used=S.edges.map(e=>num(e.th));
+  const th=[2,1,0.4,0.5,0.6,1.3,0.8].find(t=>!used.includes(t))||2;
+  S.edges.push({th,price:th>=1?3.2:1.4});
+  renderSettings();renderParts();recalc();
+  $$('#edge-types .edge-row').pop()?.querySelector('select')?.focus();
+};
+
+/* zdarzenia: tabela formatek */
+const tb=$('#parts-body');
+tb.addEventListener('input',e=>{
+  const el=e.target,tr=el.closest('tr'),p=S.parts.find(x=>x.id===tr?.dataset.id);if(!p||!el.dataset.k)return;
+  const k=el.dataset.k;p[k]=(k==='name'||k==='mat')?el.value:el.value.replace(',','.');
+  recalc();
+});
+tb.addEventListener('click',e=>{
+  const btn=e.target.closest('[data-side],[data-act]');if(!btn)return;
+  const tr=btn.closest('tr'),p=S.parts.find(x=>x.id===tr.dataset.id);if(!p)return;
+  if(btn.dataset.act==='del'){S.parts=S.parts.filter(x=>x!==p);renderParts();recalc();return}
+  const sd=btn.dataset.side;
+  const N=S.edges.length+1;
+  if(sd==='all'){const nx=(Math.max(...p.e)+1)%N;p.e=[nx,nx,nx,nx]}
+  else{const i=+sd;p.e[i]=(p.e[i]+1)%N}
+  tr.querySelector('.ew').outerHTML=ewHTML(p.e);
+  recalc();
+});
+tb.addEventListener('keydown',e=>{
+  if(e.key!=='Enter'||e.target.tagName!=='INPUT')return;
+  e.preventDefault();
+  const tr=e.target.closest('tr');
+  if(tr===tb.lastElementChild)addPart();
+  else{const k=e.target.dataset.k;tr.nextElementSibling.querySelector(`[data-k="${k}"]`)?.focus()}
+});
+$('#btn-addpart').onclick=()=>addPart();
+$('#btn-csv').onclick=()=>{
+  const L=v=>v?edgeLabel(v-1):'';
+  const rows=[['Lp','Nazwa','Długość','Szerokość','Ilość','Dekor','Kant dł.1','Kant dł.2','Kant szer.1','Kant szer.2']];
+  S.parts.forEach((p,i)=>{rows.push([i+1,p.name,p.l,p.w,p.qty,matName(matById(p.mat)),L(p.e[0]),L(p.e[1]),L(p.e[2]),L(p.e[3])])});
+  copyText(rows.map(r=>r.map(v=>String(v).replace(/;/g,',')).join(';')).join('\n'),'Lista skopiowana – wklej do Excela lub maila');
+};
+$('#btn-sample').onclick=()=>{
+  const s=sample();s.id=S.id;s.meta=S.meta;s.o.co=DB.co;s.o.num=S.o.num;syncOffer(s);
+  DB.projects[DB.projects.indexOf(S)]=s;S=s;markDirty(S);initAll(true);toast('Wczytano przykładową kuchnię do tego zlecenia');
+};
+let clearArm=null;
+$('#btn-clear').onclick=e=>{
+  const b=e.currentTarget;
+  if(!clearArm){b.textContent='Na pewno? Kliknij ponownie';clearArm=setTimeout(()=>{b.textContent='Wyczyść formatki';clearArm=null},3500);return}
+  clearTimeout(clearArm);clearArm=null;b.textContent='Wyczyść formatki';
+  S.parts=[];S.example=false;
+  renderParts();addPart(false);renderNote();recalc();toast('Lista formatek wyczyszczona');
+};
+function renderNote(){
+  $('#example-note').innerHTML=S.example?`<div class="example-note"><span>Na start wczytany jest <b>przykład: szafka dolna i górna kuchni</b>. Wymiary i ceny są przykładowe.</span><button class="btn ghost" id="note-x">Ukryj</button></div>`:'';
+  const x=$('#note-x');if(x)x.onclick=()=>{S.example=false;renderNote();save()};
+}
+
+/* ---------- Szuflady ---------- */
+function drawerCalc(){
+  const d=S.dr,T=SLIDES[d.type]||SLIDES.kulkowe;
+  const W=num(d.W),H=num(d.H),D=num(d.D),t=num(d.t),n=Math.max(1,Math.min(8,Math.round(num(d.n)))),side=num(d.side),gap=num(d.gap);
+  const inW=W-2*t;
+  const avail=SLIDE_LEN.filter(L=>L<=D-10);
+  const L=d.slide==='auto'?(avail[avail.length-1]||SLIDE_LEN[0]):num(d.slide);
+  const boxL=L-T.short, boxW=inW-num(d.clear);
+  let r=String(d.ratio||'').split(/[:;,\s]+/).map(num).filter(x=>x>0);
+  if(r.length!==n)r=Array(n).fill(1);
+  const sum=r.reduce((a,b)=>a+b,0),fH=(H-n*gap);
+  const fronts=r.map(x=>Math.floor(fH*x/sum*2)/2);
+  const fW=W-gap;
+  const big=thickIdx();
+  const drawers=fronts.map((fh,i)=>{
+    const bh=Math.max(60,Math.round(fh-num(d.reserve)));
+    const bottom=d.bottom==='hdf_rowek'?[boxW-2*side+14,boxL-2*side+14]:[boxW,boxL];
+    return {i,fh,bh,parts:[
+      {name:'Bok skrzynki',l:boxL,w:bh,qty:2,mat:'box',e:[1,0,0,0]},
+      {name:'Przód / tył skrzynki',l:boxW-2*side,w:bh,qty:2,mat:'box',e:[1,0,0,0]},
+      {name:'Dno HDF',l:bottom[0],w:bottom[1],qty:1,mat:'hdf',e:[0,0,0,0]},
+      {name:'Front szuflady',l:fW,w:fh,qty:1,mat:'front',e:[big,big,big,big]}
+    ]};
+  });
+  return {W,H,D,t,n,inW,L,boxL,boxW,fW,fronts,drawers,T,avail,side,gap,warn:boxW-2*side<=0||!avail.length||L>D-10};
+}
+function renderDrawer(){
+  const d=S.dr;
+  $$('[data-d]').forEach(el=>{
+    const k=el.dataset.d;
+    if(k==='boxMat'||k==='frontMat'){if(!S.mats.some(m=>m.id===d[k]))d[k]=S.mats[0].id;el.innerHTML=S.mats.map(m=>`<option value="${m.id}">${esc(matName(m))}</option>`).join('')}
+    if(k==='slide')el.innerHTML=`<option value="auto">auto (najdłuższe pasujące)</option>`+SLIDE_LEN.map(L=>`<option value="${L}">${L} mm</option>`).join('');
+    if(k==='t'||k==='side')el.innerHTML=opts([12,16,18,19],d[k],' mm');
+    if(k==='gap')el.innerHTML=opts(GAPS,d[k],' mm');
+    if(document.activeElement!==el)el.value=d[k];
+  });
+  drawerOut();
+}
+function drawerOut(){
+  const c=drawerCalc();
+  const pad=40,vw=c.W+pad*2,vh=c.H+pad*2;let y=pad+c.gap,sv='';
+  sv+=`<rect class="cab" x="${pad}" y="${pad}" width="${c.W}" height="${c.H}"/>`;
+  c.drawers.forEach(dr=>{
+    sv+=`<rect class="fr" x="${pad+c.gap/2}" y="${y}" width="${c.fW}" height="${dr.fh}"/>`;
+    sv+=`<rect class="box" x="${pad+c.t+c.gap}" y="${y+dr.fh-dr.bh-12}" width="${Math.max(0,c.boxW)}" height="${dr.bh}"/>`;
+    sv+=`<text x="${pad+c.W/2}" y="${y+dr.fh/2+12}" text-anchor="middle">${mm(dr.fh)}</text>`;
+    y+=dr.fh+c.gap;
+  });
+  $('#dr-svg').innerHTML=`<svg viewBox="0 0 ${vw} ${vh}" role="img" aria-label="Widok frontów szafki">${sv}</svg><p class="small muted" style="margin:8px 0 0">Fronty i obrys skrzynek (przerywany), widok z przodu.</p>`;
+  $('#dr-formula').innerHTML=`
+    <h3 style="margin-bottom:8px">Jak to policzyłem</h3>
+    <span>Światło szafki: ${mm(c.W)} − 2×${mm(c.t)} = <b>${mm(c.inW)} mm</b></span>
+    <span>Szer. skrzynki: ${mm(c.inW)} − ${mm(num(S.dr.clear))} luzu = <b>${mm(c.boxW)} mm</b></span>
+    <span>Prowadnice ${c.T.label}: <b>${c.L} mm</b>${S.dr.slide==='auto'?' (najdłuższe ≤ głęb. − 10)':''}</span>
+    <span>Długość boku: <b>${mm(c.boxL)} mm</b>${c.T.short?` (prowadnica − ${c.T.short})`:''}</span>
+    <span>Front: ${mm(c.W)} − ${dec(c.gap)} = <b>${mm(c.fW)} mm</b>, wys. z podziału ${esc(S.dr.ratio||'równo')}</span>
+    <span>Wys. skrzynki = front − ${mm(num(S.dr.reserve))} mm</span>
+    ${c.warn?`<span class="pill bad" style="margin-top:6px">Sprawdź wymiary – skrzynka lub prowadnica się nie mieści</span>`:''}`;
+  const em=e=>`<span class="edge-mini">${['t','b','l','r'].map((s,i)=>`<span class="${s} e${e[i]}"></span>`).join('')}</span>`;
+  const mlabel=k=>k==='box'?matName(matById(S.dr.boxMat)):k==='front'?matName(matById(S.dr.frontMat)):'HDF 3 mm';
+  let rows=`<thead><tr><th>Element</th><th class="r">Dług.</th><th class="r">Szer.</th><th class="r">Szt.</th><th>Dekor</th><th>Kant</th></tr></thead><tbody>`;
+  c.drawers.forEach(dr=>{
+    rows+=`<tr class="grp"><td colspan="6">Szuflada ${dr.i+1} · front ${mm(dr.fh)} mm</td></tr>`;
+    dr.parts.forEach(p=>{rows+=`<tr><td>${p.name}</td><td class="r mono">${mm(p.l)}</td><td class="r mono">${mm(p.w)}</td><td class="r mono">${p.qty}</td><td class="small muted">${esc(mlabel(p.mat))}</td><td>${p.mat==='hdf'?'<span class="muted small">—</span>':em(p.e)}</td></tr>`});
+  });
+  rows+=`<tr class="grp"><td colspan="6">Okucia</td></tr><tr><td>Prowadnice ${c.T.label} ${c.L} mm</td><td></td><td></td><td class="r mono">${c.n} kpl</td><td colspan="2"></td></tr></tbody>`;
+  $('#dr-table').innerHTML=rows;
+}
+function drawerInput(e){
+  const k=e.target.dataset.d;if(!k)return;
+  const v=e.target.value;
+  S.dr[k]=['ratio','type','slide','bottom','boxMat','frontMat'].includes(k)?v:v.replace(',','.');
+  if(k==='type'){S.dr.clear=SLIDES[v].clear;if(v==='pod')S.dr.side=16;renderDrawer()}
+  else if(k==='n'){const n=Math.max(1,Math.round(num(v)));S.dr.ratio=Array(n).fill(1).join(':');renderDrawer()}
+  else drawerOut();
+  save();
+}
+$('#v-szuflady').addEventListener('input',drawerInput);
+$('#btn-dr-add').onclick=()=>{
+  const c=drawerCalc();
+  let hdf=S.mats.find(m=>/hdf/i.test(m.name));
+  if(!hdf){hdf={id:'m'+uid(),name:'HDF biały',t:3,price:48,grain:false};S.mats.push(hdf)}
+  const mp={box:S.dr.boxMat,front:S.dr.frontMat,hdf:hdf.id};
+  const tag=`szafka ${mm(c.W)}`;
+  const acc=[];
+  c.drawers.forEach(dr=>dr.parts.forEach(p=>{
+    const name=`${p.name} (${tag})`,key=[name,p.l,p.w,p.mat,p.e.join('')].join('|');
+    const ex=acc.find(a=>a.key===key);if(ex)ex.qty+=p.qty;else acc.push({key,name,l:p.l,w:p.w,qty:p.qty,mat:mp[p.mat],e:[...p.e]});
+  }));
+  acc.forEach(a=>S.parts.push({id:uid(),name:a.name,l:a.l,w:a.w,qty:a.qty,mat:a.mat,e:a.e}));
+  S.q.hw.push({id:uid(),name:`Prowadnice ${c.T.label} ${c.L} mm (kpl)`,qty:c.n,price:c.T.price});
+  renderMats();renderParts();renderResults();save();
+  toast(`Dodano ${acc.length} pozycji do rozkroju i prowadnice do wyceny`);
+};
+
+/* ---------- Szafa przesuwna ---------- */
+const SZ_TYPES={polki:'Półki',drazek:'Drążek długi',drazek_polki:'Drążek + półki',dwa_drazki:'Dwa drążki'};
+const SZ_FILL={plyta:['płyta 10 mm',380],lustro:['lustro',520],mix:['płyta + lustro',450]}; // zł/m² skrzydła
+const clampI=(v,a,b)=>Math.max(a,Math.min(b,Math.round(num(v))));
+function defaultSz(p){
+  const m=(p.mats.find(x=>!/hdf/i.test(x.name))||p.mats[0]).id;
+  return {mode:'wneka',W:2400,H:2600,D:650,t:18,cokol:80,zone:100,n:3,overlap:30,hRed:45,fill:'mix',mat:m,back:false,
+    secs:[{type:'drazek_polki',k:3},{type:'polki',k:6},{type:'drazek',k:1}]};
+}
+function szCalc(){
+  if(!S.sz)S.sz=defaultSz(S);
+  const z=S.sz,W=num(z.W),H=num(z.H),D=num(z.D),t=num(z.t),cok=num(z.cokol),zone=num(z.zone);
+  const n=clampI(z.n,2,6),ov=num(z.overlap),korpus=z.mode==='korpus',s=z.secs.length;
+  const Wi=W-2*t,Hi=H-2*t-cok,Dk=D-zone,outerD=korpus?D:Dk;
+  const openW=korpus?Wi:W,openH=korpus?Hi:H;
+  const doorW=Math.floor((openW+(n-1)*ov)/n*2)/2,doorH=openH-num(z.hRed);
+  const secW=(Wi-(s-1)*t)/s;
+  const parts=[],P=(name,l,w,qty,mat,e)=>{if(qty>0)parts.push({name,l:Math.round(l*10)/10,w:Math.round(w*10)/10,qty,mat,e})};
+  P('Bok szafy',H,outerD,2,'k',[1,0,0,0]);
+  P('Wieniec górny',Wi,outerD,1,'k',[1,0,0,0]);
+  P('Wieniec dolny',Wi,outerD,1,'k',[1,0,0,0]);
+  if(cok>0)P('Cokół',Wi,cok,1,'k',[1,0,0,0]);
+  P('Przegroda',Hi,Dk,s-1,'k',[1,0,0,0]);
+  let shelves=0,rods=0;
+  const secs=z.secs.map(sec=>{
+    const k=sec.type==='polki'?clampI(sec.k,1,12):sec.type==='drazek'?1:sec.type==='drazek_polki'?3:2;
+    const r=sec.type==='polki'?0:sec.type==='dwa_drazki'?2:1;
+    shelves+=k;rods+=r;return {type:sec.type,k,r};
+  });
+  P('Półka',secW-1,Dk-20,shelves,'k',[1,0,0,0]);
+  if(z.back)P('Plecy HDF (na sekcję)',Hi+2*t-4,secW+t-2,s,'hdf',[0,0,0,0]);
+  const fill=SZ_FILL[z.fill]||SZ_FILL.mix,doorArea=doorW*doorH/1e6;
+  const hw=[
+    {name:`System drzwi przesuwnych, szyny ${mm(openW)} mm (kpl)`,qty:1,price:250},
+    {name:`Skrzydło przesuwne ${mm(doorW)}×${mm(doorH)} mm, ${fill[0]}`,qty:n,price:Math.round(doorArea*fill[1])},
+    {name:`Drążek ubraniowy ${mm(secW-2)} mm`,qty:rods,price:30},
+    {name:'Wspornik drążka',qty:rods*2,price:4}
+  ].filter(h=>h.qty>0);
+  return {W,H,D,t,cok,zone,n,ov,korpus,s,Wi,Hi,Dk,openW,openH,doorW,doorH,doorArea,secW,parts,secs,shelves,rods,hw,fill,
+    warn:secW<250||Dk<350||doorH<=0||doorW<=0};
+}
+function renderWardrobe(){
+  const z=(szCalc(),S.sz);
+  $$('#v-szafa [data-z]').forEach(el=>{
+    const k=el.dataset.z;
+    if(k==='t')el.innerHTML=opts([16,18,19],z.t,' mm');
+    if(k==='cokol')el.innerHTML=opts([0,60,80,100,120],z.cokol,' mm');
+    if(k==='zone')el.innerHTML=opts([80,90,100,110,120],z.zone,' mm');
+    if(k==='n')el.innerHTML=opts([2,3,4,5,6],z.n);
+    if(k==='s')el.innerHTML=opts([1,2,3,4,5,6],z.secs.length);
+    if(k==='mat'){if(!S.mats.some(m=>m.id===z.mat))z.mat=S.mats[0].id;el.innerHTML=S.mats.filter(m=>!/hdf/i.test(m.name)).map(m=>`<option value="${m.id}">${esc(matName(m))}</option>`).join('')}
+    if(k==='back'){el.checked=!!z.back;return}
+    if(k!=='s'&&document.activeElement!==el)el.value=z[k];
+  });
+  renderSecs();szOut();
+}
+function renderSecs(){
+  const c=szCalc();
+  $('#sz-secs').innerHTML=S.sz.secs.map((sec,i)=>`
+    <div class="sec-row" data-i="${i}">
+      <span class="label">Sekcja ${i+1}</span>
+      <select class="in" data-sec="type" aria-label="Układ sekcji ${i+1}">${Object.entries(SZ_TYPES).map(([v,l])=>`<option value="${v}" ${v===sec.type?'selected':''}>${l}</option>`).join('')}</select>
+      ${sec.type==='polki'?`<input class="in mono" data-sec="k" value="${sec.k}" inputmode="numeric" aria-label="Liczba półek w sekcji ${i+1}" title="Liczba półek">`:`<span class="small muted mono" style="text-align:right">${mm(c.secW)}</span>`}
+    </div>`).join('');
+}
+function szOut(){
+  const c=szCalc(),pad=60,fs=Math.max(40,Math.min(70,c.W/32));
+  let g=`<rect class="cab" x="0" y="0" width="${c.W}" height="${c.H}"/>`;
+  // korpus: boki, wieńce, cokół
+  g+=`<rect class="pl" x="0" y="0" width="${c.t}" height="${c.H}"/><rect class="pl" x="${c.W-c.t}" y="0" width="${c.t}" height="${c.H}"/>`;
+  g+=`<rect class="pl" x="${c.t}" y="0" width="${c.Wi}" height="${c.t}"/>`;
+  const yb=c.H-c.cok-c.t;
+  g+=`<rect class="pl" x="${c.t}" y="${yb}" width="${c.Wi}" height="${c.t}"/>`;
+  if(c.cok>0)g+=`<rect class="pl" x="${c.t}" y="${c.H-c.cok}" width="${c.Wi}" height="${c.cok}"/>`;
+  const top=c.t,bot=yb;
+  c.secs.forEach((sec,i)=>{
+    const x=c.t+i*(c.secW+c.t);
+    if(i>0)g+=`<rect class="pl" x="${x-c.t}" y="${top}" width="${c.t}" height="${c.Hi}"/>`;
+    const shelf=y=>{g+=`<rect class="sh" x="${x}" y="${y}" width="${c.secW}" height="${c.t}"/>`};
+    const rod=y=>{g+=`<line class="rod" x1="${x+30}" y1="${y}" x2="${x+c.secW-30}" y2="${y}"/>`};
+    if(sec.type==='polki'){for(let j=1;j<=sec.k;j++)shelf(top+c.Hi*j/(sec.k+1))}
+    else{
+      shelf(top+300);rod(top+380);
+      if(sec.type==='drazek_polki'){shelf(bot-900);shelf(bot-450)}
+      if(sec.type==='dwa_drazki'){shelf(top+c.Hi*0.52);rod(top+c.Hi*0.52+80)}
+    }
+    g+=`<text class="sl" x="${x+c.secW/2}" y="${bot-24}" style="font-size:${fs*0.7}px" text-anchor="middle">${mm(c.secW)}</text>`;
+  });
+  // skrzydła drzwi (przerywane)
+  const ox=c.korpus?c.t:0,oy=c.korpus?c.t:0;
+  for(let i=0;i<c.n;i++){
+    const x=ox+i*(c.doorW-c.ov);
+    g+=`<rect class="door" x="${x+4}" y="${oy+4}" width="${c.doorW-8}" height="${c.openH-8}"/>`;
+    g+=`<text class="dl" x="${x+c.doorW/2}" y="${-18}" style="font-size:${fs*0.75}px" text-anchor="middle">${mm(c.doorW)}</text>`;
+  }
+  $('#sz-svg').innerHTML=`<svg viewBox="${-pad} ${-pad-fs} ${c.W+pad*2} ${c.H+pad*2+fs}" role="img" aria-label="Widok szafy z przodu">${g}</svg>
+    <div class="legend" style="margin-top:8px"><span><i style="background:var(--k4)"></i>skrzydła drzwi</span><span><i style="background:var(--accent)"></i>drążek</span></div>`;
+  $('#sz-formula').innerHTML=`
+    <h3 style="margin-bottom:8px">Jak to policzyłem</h3>
+    <span>Światło drzwi: <b>${mm(c.openW)} × ${mm(c.openH)} mm</b>${c.korpus?' (między bokami i wieńcami)':' (cała wnęka)'}</span>
+    <span>Szer. skrzydła: (${mm(c.openW)} + ${c.n-1}×${mm(c.ov)}) / ${c.n} = <b>${mm(c.doorW)} mm</b></span>
+    <span>Wys. skrzydła: ${mm(c.openH)} − ${mm(num(S.sz.hRed))} = <b>${mm(c.doorH)} mm</b></span>
+    <span>Głębokość wnętrza: ${mm(c.D)} − ${mm(c.zone)} na tory = <b>${mm(c.Dk)} mm</b></span>
+    <span>Wnętrze: ${mm(c.Wi)} × ${mm(c.Hi)} mm, sekcja <b>${mm(c.secW)} mm</b></span>
+    <span>Drzwi razem: <b>${fmt(c.doorArea*c.n,2)} m²</b>, ${c.fill[0]}</span>
+    ${c.warn?`<span class="pill bad" style="margin-top:6px">Sprawdź wymiary – za wąska sekcja lub za płytka szafa</span>`:''}`;
+  const em=e=>`<span class="edge-mini">${['t','b','l','r'].map((s,i)=>`<span class="${s} e${e[i]}"></span>`).join('')}</span>`;
+  const mlabel=k=>k==='k'?matName(matById(S.sz.mat)):'HDF 3 mm';
+  let rows=`<thead><tr><th>Element</th><th class="r">Dług.</th><th class="r">Szer.</th><th class="r">Szt.</th><th>Dekor</th><th>Kant</th></tr></thead><tbody>
+    <tr class="grp"><td colspan="6">Korpus i wnętrze</td></tr>`;
+  c.parts.forEach(p=>{rows+=`<tr><td>${p.name}</td><td class="r mono">${mm(p.l)}</td><td class="r mono">${mm(p.w)}</td><td class="r mono">${p.qty}</td><td class="small muted">${esc(mlabel(p.mat))}</td><td>${p.mat==='hdf'?'<span class="muted small">—</span>':em(p.e)}</td></tr>`});
+  rows+=`<tr class="grp"><td colspan="6">Drzwi i okucia (do zamówienia)</td></tr>`;
+  c.hw.forEach(h=>{rows+=`<tr><td colspan="3">${esc(h.name)}</td><td class="r mono">${h.qty}</td><td colspan="2" class="small muted">${zl(h.price)} / szt.</td></tr>`});
+  $('#sz-table').innerHTML=rows+'</tbody>';
+}
+$('#v-szafa').addEventListener('input',e=>{
+  const el=e.target,z=S.sz;
+  if(el.dataset.sec){
+    const i=+el.closest('.sec-row').dataset.i;
+    z.secs[i][el.dataset.sec]=el.dataset.sec==='type'?el.value:el.value;
+    if(el.dataset.sec==='type'){if(el.value==='polki'&&!(num(z.secs[i].k)>0))z.secs[i].k=5;renderSecs()}
+  }else if(el.dataset.z){
+    const k=el.dataset.z;
+    if(k==='s'){const n=clampI(el.value,1,6);while(z.secs.length<n)z.secs.push({type:'polki',k:5});z.secs.length=n;renderSecs()}
+    else if(k==='back')z.back=el.checked;
+    else z[k]=['mode','fill','mat'].includes(k)?el.value:el.value.replace(',','.');
+    if(k==='W'||k==='t'||k==='n')renderSecs();
+  }else return;
+  szOut();save();
+});
+$('#btn-sz-add').onclick=()=>{
+  const c=szCalc();
+  let hdf=S.mats.find(m=>/hdf/i.test(m.name));
+  if(c.parts.some(p=>p.mat==='hdf')&&!hdf){hdf={id:'m'+uid(),name:'HDF biały',t:3,price:48,grain:false};S.mats.push(hdf)}
+  const tag=`szafa ${mm(c.W)}`;
+  c.parts.forEach(p=>S.parts.push({id:uid(),name:`${p.name} (${tag})`,l:p.l,w:p.w,qty:p.qty,mat:p.mat==='hdf'?hdf.id:S.sz.mat,e:[...p.e]}));
+  c.hw.forEach(h=>S.q.hw.push({id:uid(),name:h.name,qty:h.qty,price:h.price}));
+  renderMats();renderParts();renderResults();save();
+  toast(`Dodano ${c.parts.length} pozycji do rozkroju i ${c.hw.length} do wyceny`);
+};
+
+/* ---------- Wycena ---------- */
+function quoteCalc(){
+  if(!NEST)NEST=nestAll();
+  const em=edgeMeters(),q=S.q;
+  const mat=NEST.mats.map(x=>({name:'Płyta '+matName(x.m),qty:x.bins.length,unit:'ark.',price:num(x.m.price)}));
+  S.edges.forEach((e,i)=>{const m=Math.ceil(em[i+1]);if(m>0)mat.push({name:edgeLabel(i),qty:m,unit:'mb',price:num(e.price)})});
+  const matSum=mat.reduce((s,x)=>s+x.qty*x.price,0);
+  const cutSum=NEST.boards*num(q.cut);
+  const glueM=Math.ceil(em.slice(1).reduce((a,b)=>a+b,0)),glueSum=glueM*num(S.set.glue);
+  const hwSum=q.hw.reduce((s,x)=>s+num(x.qty)*num(x.price),0);
+  const shop=num(q.shopH)*num(q.shopRate),mont=num(q.montH)*num(q.montRate);
+  const labSum=shop+mont+num(q.transport)+num(q.other);
+  const mk=num(q.markup)/100;
+  const cost=matSum+cutSum+glueSum+hwSum+num(q.transport)+num(q.other);
+  const net=(matSum+hwSum)*(1+mk)+cutSum+glueSum+labSum;
+  const vat=net*num(q.vat)/100;
+  return {mat,matSum,cutSum,glueM,glueSum,hwSum,shop,mont,labSum,mk,cost,net,vat,gross:net+vat,profit:net-cost,
+    groups:{materials:matSum*(1+mk)+cutSum+glueSum,hardware:hwSum*(1+mk),work:labSum}};
+}
+function renderQuote(){
+  const c=quoteCalc(),q=S.q;
+  $('#q-mat').innerHTML=`<thead><tr><th>Pozycja</th><th class="r">Ilość</th><th class="r">Cena</th><th class="r">Wartość</th></tr></thead><tbody>
+    ${c.mat.map(x=>`<tr><td>${esc(x.name)}</td><td class="r">${fmt(x.qty)} ${x.unit}</td><td class="r">${zl(x.price)}</td><td class="r">${zl(x.qty*x.price)}</td></tr>`).join('')||`<tr><td colspan="4" class="muted">Dodaj formatki w zakładce Rozkrój.</td></tr>`}
+    <tr><td>Cięcie (usługa, za arkusz)</td><td class="r">${NEST.boards} ark.</td><td class="r"><input class="in num-in" id="q-cut" value="${q.cut}" inputmode="decimal" aria-label="Cena cięcia za arkusz"></td><td class="r" id="q-cut-sum">${zl(c.cutSum)}</td></tr>
+    <tr><td>Klejenie kantu (usługa, za mb)</td><td class="r">${fmt(c.glueM)} mb</td><td class="r"><input class="in num-in" id="q-glue" value="${S.set.glue}" inputmode="decimal" aria-label="Cena klejenia kantu za metr"></td><td class="r" id="q-glue-sum">${zl(c.glueSum)}</td></tr>
+    </tbody>`;
+  renderHw();
+  $('#q-lab').innerHTML=`<thead><tr><th>Pozycja</th><th class="r">Godziny</th><th class="r">Stawka / kwota</th><th class="r">Wartość</th></tr></thead><tbody>
+    <tr><td>Praca w warsztacie</td><td class="r"><input class="in num-in" data-q="shopH" value="${q.shopH}" inputmode="decimal"></td><td class="r"><input class="in num-in" data-q="shopRate" value="${q.shopRate}" inputmode="decimal"></td><td class="r" data-out="shop">${zl(c.shop)}</td></tr>
+    <tr><td>Montaż u klienta</td><td class="r"><input class="in num-in" data-q="montH" value="${q.montH}" inputmode="decimal"></td><td class="r"><input class="in num-in" data-q="montRate" value="${q.montRate}" inputmode="decimal"></td><td class="r" data-out="mont">${zl(c.mont)}</td></tr>
+    <tr><td>Transport</td><td></td><td class="r"><input class="in num-in" data-q="transport" value="${q.transport}" inputmode="decimal"></td><td></td></tr>
+    <tr><td>Inne koszty</td><td></td><td class="r"><input class="in num-in" data-q="other" value="${q.other}" inputmode="decimal"></td><td></td></tr></tbody>`;
+  $('#q-markup').value=q.markup;$('#q-vat').value=String(q.vat);
+  renderQSum(c);
+}
+function renderHw(){
+  const q=S.q;
+  $('#q-hw').innerHTML=`<thead><tr><th>Nazwa</th><th class="r">Ilość</th><th class="r">Cena zakupu</th><th class="r">Wartość</th><th></th></tr></thead><tbody>
+    ${q.hw.map(h=>`<tr data-id="${h.id}"><td><input class="in" data-h="name" value="${esc(h.name)}" aria-label="Nazwa"></td><td class="r"><input class="in num-in" data-h="qty" value="${h.qty}" inputmode="decimal" style="width:70px"></td><td class="r"><input class="in num-in" data-h="price" value="${h.price}" inputmode="decimal"></td><td class="r" data-out="hw">${zl(num(h.qty)*num(h.price))}</td><td><button class="iconbtn" data-act="delhw" aria-label="Usuń">×</button></td></tr>`).join('')||`<tr><td colspan="5" class="muted">Brak okuć. Dodaj zawiasy, prowadnice, uchwyty…</td></tr>`}</tbody>`;
+}
+function renderQSum(c){
+  c=c||quoteCalc();
+  $('#q-sum').innerHTML=`
+    <div class="sum-row"><span>Płyty i kant</span><span>${zl(c.matSum)}</span></div>
+    <div class="sum-row"><span>Okucia</span><span>${zl(c.hwSum)}</span></div>
+    <div class="sum-row"><span>Narzut ${fmt(S.q.markup)}%</span><span>${zl((c.matSum+c.hwSum)*c.mk)}</span></div>
+    <div class="sum-row"><span>Cięcie</span><span>${zl(c.cutSum)}</span></div>
+    <div class="sum-row"><span>Klejenie kantu</span><span>${zl(c.glueSum)}</span></div>
+    <div class="sum-row"><span>Robocizna, montaż, transport</span><span>${zl(c.labSum)}</span></div>
+    <div class="sum-row" style="font-weight:600"><span>Cena netto</span><span>${zl(c.net)}</span></div>
+    <div class="sum-row"><span>VAT ${S.q.vat}%</span><span>${zl(c.vat)}</span></div>
+    <div class="sum-row big"><span>Brutto</span><span>${zl(c.gross)}</span></div>
+    <div class="sum-row profit" style="margin-top:10px"><span>Twój zarobek</span><span>${zl(c.profit)}</span></div>
+    <div class="sum-row small muted"><span>Koszty zakupu i usług obcych</span><span>${zl(c.cost)}</span></div>`;
+}
+function qLive(){
+  const c=quoteCalc();
+  const cs=$('#q-cut-sum');if(cs)cs.textContent=zl(c.cutSum);
+  const gs=$('#q-glue-sum');if(gs)gs.textContent=zl(c.glueSum);
+  const sh=$('[data-out="shop"]');if(sh)sh.textContent=zl(c.shop);
+  const mo=$('[data-out="mont"]');if(mo)mo.textContent=zl(c.mont);
+  $$('#q-hw tr[data-id]').forEach(tr=>{const h=S.q.hw.find(x=>x.id===tr.dataset.id);if(h)tr.querySelector('[data-out]').textContent=zl(num(h.qty)*num(h.price))});
+  renderQSum(c);save();
+}
+$('#v-wycena').addEventListener('input',e=>{
+  const el=e.target;
+  if(el.id==='q-cut')S.q.cut=num(el.value);
+  else if(el.id==='q-glue'){S.set.glue=num(el.value);$('#s-glue').value=el.value;renderResults()}
+  else if(el.id==='q-markup')S.q.markup=num(el.value);
+  else if(el.id==='q-vat')S.q.vat=num(el.value);
+  else if(el.dataset.q)S.q[el.dataset.q]=num(el.value);
+  else if(el.dataset.h){const h=S.q.hw.find(x=>x.id===el.closest('tr').dataset.id);h[el.dataset.h]=el.dataset.h==='name'?el.value:num(el.value)}
+  else return;
+  qLive();
+});
+$('#v-wycena').addEventListener('change',e=>{if(e.target.id==='q-vat'){S.q.vat=num(e.target.value);qLive()}});
+$('#q-hw').addEventListener('click',e=>{if(e.target.dataset.act!=='delhw')return;const id=e.target.closest('tr').dataset.id;S.q.hw=S.q.hw.filter(h=>h.id!==id);renderHw();qLive()});
+$('#btn-addhw').onclick=()=>{S.q.hw.push({id:uid(),name:'',qty:1,price:0});renderHw();qLive();$('#q-hw tbody tr:last-child input')?.focus()};
+
+/* ---------- Oferta ---------- */
+const getP=(o,p)=>p.split('.').reduce((a,k)=>a?.[k],o);
+const setP=(o,p,v)=>{const ks=p.split('.');const last=ks.pop();ks.reduce((a,k)=>a[k],o)[last]=v};
+function dateAdd(iso,days){const d=new Date(iso||Date.now());d.setDate(d.getDate()+days);return d}
+const dpl=d=>d.toLocaleDateString('pl-PL',{day:'numeric',month:'long',year:'numeric'});
+function renderOffer(){
+  const o=S.o;
+  $$('[data-o]').forEach(el=>{if(document.activeElement!==el)el.value=getP(o,el.dataset.o)??''});
+  $$('#o-mode button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===o.mode)));
+  $('#o-colors').innerHTML=OFFER_COLORS.map(([c,n])=>`<button style="background:${c}" aria-label="Kolor ${n}" aria-pressed="${c===o.color}" data-c="${c}"></button>`).join('');
+  $('#o-logo-rm').hidden=!IMG.logo;$('#o-img-rm').hidden=!IMG.img;
+  paper();
+}
+function offerLines(c){
+  const o=S.o;
+  if(o.mode==='single')return [{name:o.title||'Wykonanie mebli na wymiar',desc:'Kompletne wykonanie według zakresu powyżej',net:c.net}];
+  return [
+    {name:'Materiały',desc:'Płyty meblowe, obrzeża, cięcie i oklejanie formatek',net:c.groups.materials},
+    {name:'Okucia i akcesoria',desc:'Zawiasy, prowadnice, uchwyty i pozostałe akcesoria',net:c.groups.hardware},
+    {name:'Wykonanie i montaż',desc:'Praca w warsztacie, transport, wniesienie i montaż',net:c.groups.work}
+  ].filter(l=>l.net>0.004);
+}
+function paper(){
+  const o=S.o,c=quoteCalc(),lines=offerLines(c);
+  const valid=dateAdd(o.date,num(o.valid)),dep=c.gross*num(o.deposit)/100;
+  const scope=String(o.scope||'').split('\n').map(s=>s.trim()).filter(Boolean);
+  const P=$('#paper');P.style.setProperty('--oa',o.color);
+  P.innerHTML=`
+    <div class="p-top">
+      <div>${IMG.logo?`<img class="p-logo" src="${IMG.logo}" alt="">`:''}<div class="p-co">${esc(o.co.name)}</div>
+        <div style="font-size:13px;color:var(--paper-muted)">${esc(o.co.addr)}<br>tel. ${esc(o.co.phone)} · ${esc(o.co.email)}${o.co.nip?`<br>NIP ${esc(o.co.nip)}`:''}</div></div>
+      <div class="p-meta">Oferta nr<br><b style="font-size:16px">${esc(o.num)}</b><br>z dnia ${dpl(new Date(o.date||Date.now()))}<br>ważna do ${dpl(valid)}</div>
+    </div>
+    <div><div class="p-kicker">Oferta dla: ${esc(o.cl.name)}</div><div class="p-title">${esc(o.title)}</div>
+      ${o.cl.addr?`<div style="color:var(--paper-muted);margin-top:6px">${esc(o.cl.addr)}</div>`:''}</div>
+    ${IMG.img?`<img class="p-img" src="${IMG.img}" alt="Wizualizacja">`:''}
+    ${scope.length?`<div><div class="p-lab">Zakres prac</div><ul>${scope.map(s=>`<li>${esc(s)}</li>`).join('')}</ul></div>`:''}
+    <div><table><thead><tr><th>Pozycja</th><th class="r">Netto</th><th class="r">VAT ${S.q.vat}%</th><th class="r">Brutto</th></tr></thead><tbody>
+      ${lines.map(l=>`<tr><td><b>${esc(l.name)}</b><br><span style="color:var(--paper-muted);font-size:13px">${esc(l.desc)}</span></td><td class="r">${zl(l.net)}</td><td class="r">${zl(l.net*num(S.q.vat)/100)}</td><td class="r"><b>${zl(l.net*(1+num(S.q.vat)/100))}</b></td></tr>`).join('')}
+    </tbody></table></div>
+    <div class="p-total"><div>
+      <div class="row"><span>Razem netto</span><span>${zl(c.net)}</span></div>
+      <div class="row"><span>VAT ${S.q.vat}%</span><span>${zl(c.vat)}</span></div>
+      <div class="row gross"><span>Do zapłaty</span><span>${zl(c.gross)}</span></div>
+    </div></div>
+    <div class="p-terms">
+      <div><div class="p-lab">Termin realizacji</div><b>${esc(o.lead)}</b></div>
+      <div><div class="p-lab">Zaliczka ${fmt(num(o.deposit))}%</div><b>${zl(dep)}</b></div>
+      <div><div class="p-lab">Pozostało po montażu</div><b>${zl(c.gross-dep)}</b></div>
+    </div>
+    ${o.notes?`<div style="font-size:13px;color:var(--paper-muted)"><div class="p-lab">Uwagi</div>${esc(o.notes).replace(/\n/g,'<br>')}</div>`:''}
+    <div class="p-foot"><span>${esc(o.co.name)} · ${esc(o.co.phone)} · ${esc(o.co.email)}</span><span>Dziękujemy za zainteresowanie!</span></div>`;
+}
+$('#v-oferta').addEventListener('input',e=>{
+  const k=e.target.dataset.o;if(!k)return;const v=e.target.value;setP(S.o,k,v);
+  if(k==='title'){S.meta.name=v;updatePill()}
+  if(k==='cl.name')S.meta.client=v;
+  if(k.startsWith('co.'))markSettings();
+  paper();save();
+});
+$('#o-mode').addEventListener('click',e=>{const m=e.target.dataset.mode;if(!m)return;S.o.mode=m;renderOffer();save()});
+$('#o-colors').addEventListener('click',e=>{const c=e.target.dataset.c;if(!c)return;S.o.color=c;renderOffer();save()});
+function readImg(input,key,maxW){
+  input.addEventListener('change',()=>{
+    const f=input.files[0];if(!f)return;
+    const fr=new FileReader();
+    fr.onload=()=>{const im=new Image();im.onload=()=>{
+      // zmniejszamy, aż obraz zmieści się w jednym dokumencie chmury
+      const enc=(w,type,q)=>{const sc=Math.min(1,w/im.width),cv=document.createElement('canvas');cv.width=Math.round(im.width*sc);cv.height=Math.round(im.height*sc);cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);return cv.toDataURL(type,q)};
+      let url='';
+      for(const [f,q] of [[1,.85],[1,.7],[.75,.7],[.5,.65],[.35,.6],[.25,.55]]){
+        url=enc(maxW*f,key==='logo'?'image/png':'image/jpeg',q);if(url.length<230000)break;
+        if(key==='logo'){url=enc(maxW*f,'image/webp',q);if(url.length<230000)break}
+      }
+      IMG[key]=url;saveImg(key);renderOffer();input.value='';
+    };im.src=fr.result};
+    fr.readAsDataURL(f);
+  });
+}
+readImg($('#o-logo'),'logo',500);readImg($('#o-img'),'img',1400);
+$('#o-logo-rm').onclick=()=>{IMG.logo=null;saveImg('logo');renderOffer()};
+$('#o-img-rm').onclick=()=>{IMG.img=null;saveImg('img');renderOffer()};
+$('#btn-offer-img').onclick=async()=>{
+  if(typeof html2canvas!=='function'){toast('Nie udało się wczytać modułu obrazów – odśwież stronę');return}
+  const b=$('#btn-offer-img');b.disabled=true;b.textContent='Tworzę obraz…';
+  try{
+    const P=$('#paper'),prev=P.style.cssText;P.style.width='760px';P.style.minWidth='760px';P.style.boxShadow='none';
+    const cv=await html2canvas(P,{scale:2,backgroundColor:'#ffffff',useCORS:true});
+    P.style.cssText=prev;
+    $('#modal-img').src=cv.toDataURL('image/png');$('#modal').hidden=false;
+  }catch(err){toast('Nie udało się utworzyć obrazu')}
+  b.disabled=false;b.textContent='Zapisz jako obraz';
+};
+$('#modal-close').onclick=()=>{$('#modal').hidden=true};
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')$('#modal').hidden=true});
+$('#btn-offer-copy').onclick=()=>{
+  const o=S.o,c=quoteCalc(),lines=offerLines(c);
+  const t=[`${o.co.name}`,`Oferta nr ${o.num} z dnia ${dpl(new Date(o.date||Date.now()))}`,`Dla: ${o.cl.name}`,'',`${o.title}`,
+    ...String(o.scope||'').split('\n').filter(s=>s.trim()).map(s=>'• '+s.trim()),'',
+    ...lines.map(l=>`${l.name}: ${zl(l.net*(1+num(S.q.vat)/100))} brutto`),'',
+    `Razem: ${zl(c.net)} netto / ${zl(c.gross)} brutto (VAT ${S.q.vat}%)`,
+    `Zaliczka ${fmt(num(o.deposit))}%: ${zl(c.gross*num(o.deposit)/100)}`,`Termin realizacji: ${o.lead}`,
+    `Oferta ważna do ${dpl(dateAdd(o.date,num(o.valid)))}`,o.notes?`\n${o.notes}`:'','',`${o.co.phone} · ${o.co.email}`].join('\n');
+  copyText(t,'Treść oferty skopiowana');
+};
+
+/* ---------- Zlecenia ---------- */
+const STATUS=[['wycena','Wycena','var(--muted)'],['zaakceptowane','Zaakceptowane','var(--accent)'],['produkcja','W produkcji','var(--k4)'],['montaz','Do montażu','var(--warn)'],['zakonczone','Zakończone','var(--ok)']];
+const stInfo=k=>STATUS.find(s=>s[0]===k)||STATUS[0];
+const TYPES=['Kuchnia','Szafa','Garderoba','Łazienka','Salon','Sypialnia','Biuro','Inne'];
+const dshort=iso=>new Date(iso).toLocaleDateString('pl-PL',{day:'numeric',month:'short'});
+const daysTo=iso=>iso?Math.round((new Date(iso)-new Date(isoToday()))/864e5):null;
+let pjFilter='all',editing=null;
+
+function syncOffer(p){const m=p.meta;p.o.title=m.name;p.o.cl.name=m.client;p.o.cl.addr=[m.addr,m.phone].filter(Boolean).join(' · ')}
+function nextNum(){
+  const d=new Date(),pre=`OF/${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/`;
+  return pre+String(DB.projects.filter(p=>String(p.o?.num||'').startsWith(pre)).length+1).padStart(2,'0');
+}
+function blankProject(meta){
+  // cennik (dekory, kanty, stawki) przechodzi z otwartego zlecenia
+  const c=JSON.parse(JSON.stringify({mats:S.mats,edges:S.edges,set:S.set}));
+  const mats=c.mats.filter(m=>!/hdf/i.test(m.name));
+  if(!mats.length)mats.push({id:'m'+uid(),name:'Biały gładki',t:18,price:165,grain:false});
+  const p={id:uid(),meta:{...meta,created:isoToday()},example:false,mats,set:c.set,edges:c.edges,parts:[],
+    dr:{W:600,H:720,D:510,t:18,n:3,ratio:'1:1:1',type:'kulkowe',slide:'auto',clear:26,side:16,reserve:40,gap:3,bottom:'hdf_pod',boxMat:mats[0].id,frontMat:mats[0].id},
+    q:{markup:S.q.markup,vat:S.q.vat,cut:S.q.cut,hw:[],shopH:0,shopRate:S.q.shopRate,montH:0,montRate:S.q.montRate,transport:0,other:0},
+    o:{co:DB.co,cl:{name:'',addr:''},title:'',scope:'',num:nextNum(),date:isoToday(),valid:S.o.valid||14,deposit:S.o.deposit||50,lead:S.o.lead||'',notes:'',mode:S.o.mode||'grouped',color:S.o.color||'#2b2620'}};
+  syncOffer(p);return p;
+}
+function projGross(p){
+  if(p!==S&&p.cache)return p.cache.gross;
+  const s0=S,n0=NEST;S=p;NEST=null;let g=0;
+  try{NEST=nestAll();g=quoteCalc().gross}catch(e){}
+  if(p!==s0){S=s0;NEST=n0}
+  p.cache={gross:g};return g;
+}
+function setActive(id){
+  const p=DB.projects.find(x=>x.id===id);if(!p)return;
+  try{S.cache={gross:quoteCalc().gross}}catch(e){}
+  S=p;DB.active=id;NEST=null;
+  try{IMG.img=localStorage.getItem(KEY+'.img.'+id)}catch(e){IMG.img=null}
+  initAll(true);
+}
+function goTab(t){if(location.hash==='#'+t)showTab(t);else location.hash=t}
+function updatePill(){
+  const st=stInfo(S.meta.status),el=$('#proj-pill');
+  el.style.setProperty('--st',st[2]);
+  el.innerHTML=`<span class="d"></span><span><small>Zlecenie:</small> ${esc(S.meta.name||'bez nazwy')}</span>`;
+}
+function dueText(p){
+  const d=daysTo(p.meta.due);
+  if(d===null||p.meta.status==='zakonczone')return '';
+  if(d<0)return `<span style="color:var(--bad)">${-d} dni po terminie</span>`;
+  return d===0?'<span style="color:var(--warn)">dziś</span>':d===1?'jutro':`za ${d} dni`;
+}
+function renderProjects(){
+  const P=DB.projects,sum=a=>a.reduce((s,p)=>s+projGross(p),0);
+  const active=P.filter(p=>p.meta.status!=='zakonczone');
+  const inprog=P.filter(p=>['zaakceptowane','produkcja','montaz'].includes(p.meta.status));
+  const quotes=P.filter(p=>p.meta.status==='wycena');
+  const dated=active.filter(p=>p.meta.due).sort((a,b)=>a.meta.due.localeCompare(b.meta.due));
+  const late=dated.filter(p=>daysTo(p.meta.due)<0),next=dated.find(p=>daysTo(p.meta.due)>=0);
+  $('#pj-kpis').innerHTML=`
+    <div><span class="label">Aktywne zlecenia</span><span class="v">${active.length}</span><span class="sub">wszystkich: ${P.length}</span></div>
+    <div><span class="label">W realizacji</span><span class="v">${fmt(sum(inprog))}<small>zł</small></span><span class="sub">${inprog.length} zleceń, brutto</span></div>
+    <div><span class="label">Wyceny u klientów</span><span class="v">${fmt(sum(quotes))}<small>zł</small></span><span class="sub">${quotes.length} czeka na decyzję</span></div>
+    <div><span class="label">Najbliższy montaż</span><span class="v">${next?dshort(next.meta.due):'—'}</span><span class="sub">${next?esc(next.meta.name):'brak terminów'}${late.length?` · <span style="color:var(--bad)">${late.length} po terminie</span>`:''}</span></div>`;
+  $('#pj-filter').innerHTML=[['all','Wszystkie',P.length],...STATUS.map(s=>[s[0],s[1],P.filter(p=>p.meta.status===s[0]).length])]
+    .map(([k,l,n])=>`<button data-f="${k}" aria-pressed="${pjFilter===k}">${l}<span class="c">${n}</span></button>`).join('');
+  renderProjectList();
+}
+function renderProjectList(){
+  const q=$('#pj-search').value.trim().toLowerCase();
+  const order=k=>STATUS.findIndex(s=>s[0]===k);
+  const list=DB.projects
+    .filter(p=>pjFilter==='all'||p.meta.status===pjFilter)
+    .filter(p=>!q||[p.meta.name,p.meta.client,p.meta.addr,p.meta.phone].join(' ').toLowerCase().includes(q))
+    .sort((a,b)=>(a.meta.status==='zakonczone')-(b.meta.status==='zakonczone')||(a.meta.due||'9999').localeCompare(b.meta.due||'9999')||order(a.meta.status)-order(b.meta.status));
+  $('#pj-list').innerHTML=list.length?list.map(p=>{
+    const m=p.meta,st=stInfo(m.status),cnt=p.parts.reduce((s,x)=>s+Math.floor(num(x.qty)),0);
+    return `<article class="pj-row ${p===S?'active':''}" data-id="${p.id}" style="--st:${st[2]}">
+      <div class="pj-main"><div class="pj-type">${esc(m.type||'Zlecenie')}${p===S?' · <b>otwarte</b>':''}</div>
+        <div class="pj-name">${esc(m.name||'bez nazwy')}</div>
+        ${m.notes?`<div class="pj-meta" title="${esc(m.notes)}">${esc(m.notes)}</div>`:''}</div>
+      <div><span class="label">Klient</span><div>${esc(m.client||'—')}</div><div class="pj-meta">${esc(m.phone||m.addr||'')}</div></div>
+      <div><span class="label">Montaż</span><div>${m.due?dpl(new Date(m.due)):'—'}</div><div class="pj-meta">${dueText(p)}</div></div>
+      <div><span class="label">Wartość brutto</span><div class="mono">${zl(projGross(p))}</div><div class="pj-meta">${cnt} formatek</div></div>
+      <select class="in pj-status" data-act="status" aria-label="Status zlecenia">${STATUS.map(s=>`<option value="${s[0]}" ${s[0]===m.status?'selected':''}>${s[1]}</option>`).join('')}</select>
+      <div class="btn-row pj-actions">
+        <button class="btn primary sm" data-act="open">Otwórz</button>
+        <button class="btn ghost sm" data-act="edit">Edytuj</button>
+        <button class="btn ghost sm" data-act="dup">Duplikuj</button>
+        <button class="btn ghost sm danger" data-act="del">Usuń</button>
+      </div></article>`;
+  }).join(''):`<div class="empty">${DB.projects.length?'Brak zleceń w tym widoku.':'Nie masz jeszcze zleceń.'}<br><br><button class="btn primary" data-act="new">+ Nowe zlecenie</button></div>`;
+}
+$('#pj-filter').addEventListener('click',e=>{const b=e.target.closest('[data-f]');if(!b)return;pjFilter=b.dataset.f;renderProjects()});
+$('#pj-search').addEventListener('input',renderProjectList);
+$('#pj-list').addEventListener('change',e=>{
+  if(e.target.dataset.act!=='status')return;
+  const p=DB.projects.find(x=>x.id===e.target.closest('.pj-row').dataset.id);
+  p.meta.status=e.target.value;if(p===S)updatePill();markDirty(p);localSave();renderProjects();
+  toast(`Status: ${stInfo(p.meta.status)[1]}`);
+});
+$('#pj-list').addEventListener('click',e=>{
+  const b=e.target.closest('[data-act]');if(!b||b.tagName==='SELECT')return;
+  if(b.dataset.act==='new'){openForm(null);return}
+  const p=DB.projects.find(x=>x.id===b.closest('.pj-row').dataset.id);if(!p)return;
+  const a=b.dataset.act;
+  if(a==='open'){if(p!==S)setActive(p.id);goTab('rozkroj')}
+  else if(a==='edit')openForm(p);
+  else if(a==='dup'){
+    const c=JSON.parse(JSON.stringify(p));
+    c.id=uid();c.meta.name+=' (kopia)';c.meta.status='wycena';c.meta.created=isoToday();c.o.co=DB.co;c.o.num=nextNum();c.o.title=c.meta.name;
+    delete c.synced;
+    try{const im=localStorage.getItem(KEY+'.img.'+p.id);if(im)localStorage.setItem(KEY+'.img.'+c.id,im)}catch(err){}
+    DB.projects.splice(DB.projects.indexOf(p)+1,0,c);markDirty(c);localSave();renderProjects();toast('Zlecenie skopiowane');
+  }
+  else if(a==='del'){
+    if(!b.dataset.armed){b.dataset.armed='1';b.textContent='Na pewno?';setTimeout(()=>{if(b.isConnected){delete b.dataset.armed;b.textContent='Usuń'}},3500);return}
+    DB.projects=DB.projects.filter(x=>x!==p);
+    try{localStorage.removeItem(KEY+'.img.'+p.id)}catch(err){}
+    cloudDelete(p.id);
+    if(!DB.projects.length){const n=blankProject({name:'Nowe zlecenie',client:'',phone:'',addr:'',type:'Inne',status:'wycena',due:'',notes:''});DB.projects.push(n);markDirty(n)}
+    if(p===S)setActive(DB.projects[0].id);else localSave();
+    renderProjects();toast('Zlecenie usunięte');
+  }
+});
+function openForm(p){
+  editing=p;
+  $('#pf-type').innerHTML=TYPES.map(t=>`<option>${t}</option>`).join('');
+  $('#pf-status').innerHTML=STATUS.map(s=>`<option value="${s[0]}">${s[1]}</option>`).join('');
+  const m=p?p.meta:{name:'',type:'Kuchnia',status:'wycena',client:'',phone:'',addr:'',due:'',notes:''};
+  ['name','type','status','client','phone','addr','due','notes'].forEach(k=>$('#pf-'+k).value=m[k]||'');
+  $('#pf-title').textContent=p?'Dane zlecenia':'Nowe zlecenie';
+  $('#pf-submit').textContent=p?'Zapisz':'Utwórz i otwórz';
+  $('#pj-modal').hidden=false;$('#pf-name').focus();
+}
+$('#btn-newproj').onclick=()=>openForm(null);
+$('#pf-cancel').onclick=()=>{$('#pj-modal').hidden=true};
+$('#pj-modal').addEventListener('click',e=>{if(e.target.id==='pj-modal')$('#pj-modal').hidden=true});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){$('#pj-modal').hidden=true;$('#modal').hidden=true}});
+$('#pj-form').addEventListener('submit',e=>{
+  e.preventDefault();
+  const meta={};['name','type','status','client','phone','addr','due','notes'].forEach(k=>meta[k]=$('#pf-'+k).value.trim());
+  if(!meta.name){$('#pf-name').focus();return}
+  $('#pj-modal').hidden=true;
+  if(editing){Object.assign(editing.meta,meta);syncOffer(editing);if(editing===S)updatePill();markDirty(editing);localSave();renderProjects();toast('Zapisano dane zlecenia');return}
+  const p=blankProject(meta);DB.projects.unshift(p);markDirty(p);setActive(p.id);goTab('rozkroj');
+  toast('Zlecenie utworzone – dodaj formatki');
+});
+
+/* ---------- Start ---------- */
+function initAll(skipTab){
+  offerDefaults();
+  renderMats();renderSettings();renderParts();renderNote();renderResults();updatePill();localSave();
+  if(!skipTab)showTab(location.hash.slice(1)||'projekty');
+  else showTab(location.hash.slice(1)||'projekty');
+}
+initAll();
+renderAccount();
+cloudInit();
+})();
+</script>
