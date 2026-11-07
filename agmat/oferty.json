@@ -1,0 +1,170 @@
+[
+  {
+    "id": "AGMA-MS-38",
+    "type": "mieszkanie",
+    "deal": "sprzedaz",
+    "location": "Częstochowa",
+    "price": 472000,
+    "area": 66.7,
+    "rooms": 4,
+    "floor": "1 piętro",
+    "desc": "",
+    "photos": [
+      "img/oferty/7000121.jpg"
+    ]
+  },
+  {
+    "id": "AGMA-MS-37",
+    "type": "mieszkanie",
+    "deal": "sprzedaz",
+    "location": "Poczesna, Huta Stara B",
+    "price": 449000,
+    "area": 60,
+    "rooms": 3,
+    "floor": "parter",
+    "desc": "",
+    "photos": [
+      "img/oferty/6992188.jpg"
+    ]
+  },
+  {
+    "id": "AGMA-MS-35",
+    "type": "mieszkanie",
+    "deal": "sprzedaz",
+    "location": "Częstochowa",
+    "price": 499000,
+    "area": 73.2,
+    "rooms": 4,
+    "floor": "2 piętro",
+    "desc": "",
+    "photos": [
+      "img/oferty/6926123.jpg"
+    ]
+  },
+  {
+    "id": "AGMA-MS-34",
+    "type": "mieszkanie",
+    "deal": "sprzedaz",
+    "location": "Częstochowa",
+    "price": 292000,
+    "area": 43,
+    "rooms": 2,
+    "floor": "2 piętro",
+    "desc": "",
+    "photos": [
+      "img/oferty/6885407.jpg"
+    ]
+  },
+  {
+    "id": "AGMA-MS-30",
+    "type": "mieszkanie",
+    "deal": "sprzedaz",
+    "location": "Częstochowa, Wrzosowiak",
+    "price": 365000,
+    "area": 54,
+    "rooms": 3,
+    "floor": "2 piętro",
+    "desc": "",
+    "photos": [
+      "img/oferty/6885374.jpg"
+    ]
+  },
+  {
+    "id": "AGMA-MS-29",
+    "type": "mieszkanie",
+    "deal": "sprzedaz",
+    "location": "",
+    "price": 155000,
+    "area": 29.1,
+    "rooms": 1,
+    "floor": "1 piętro",
+    "desc": "",
+    "photos": [
+      "img/oferty/6873354.jpg"
+    ]
+  },
+  {
+    "id": "AGMA-MS-28",
+    "type": "mieszkanie",
+    "deal": "sprzedaz",
+    "location": "Częstochowa",
+    "price": 329000,
+    "area": 55.3,
+    "rooms": 2,
+    "floor": "4 piętro",
+    "desc": "",
+    "photos": [
+      "img/oferty/6865151.jpg"
+    ]
+  },
+  {
+    "id": "AGMA-DS-27",
+    "type": "dom",
+    "deal": "sprzedaz",
+    "location": "Częstochowa",
+    "price": 575000,
+    "area": 190,
+    "rooms": null,
+    "floor": null,
+    "desc": "",
+    "photos": [
+      "img/oferty/6865126.jpg"
+    ]
+  },
+  {
+    "id": "AGMA-DS-26",
+    "type": "dom",
+    "deal": "sprzedaz",
+    "location": "Miedźno, Władysławów",
+    "price": 390000,
+    "area": 75,
+    "rooms": null,
+    "floor": null,
+    "desc": "",
+    "photos": [
+      "img/oferty/6847263.jpg"
+    ]
+  },
+  {
+    "id": "AGMA-MW-32",
+    "type": "mieszkanie",
+    "deal": "wynajem",
+    "location": "Częstochowa",
+    "price": 3000,
+    "area": 66.4,
+    "rooms": 3,
+    "floor": "3 piętro",
+    "desc": "",
+    "photos": [
+      "img/oferty/6885400.jpg"
+    ]
+  },
+  {
+    "id": "AGMA-MW-31",
+    "type": "mieszkanie",
+    "deal": "wynajem",
+    "location": "Częstochowa, Ostatni Grosz",
+    "price": 1200,
+    "area": null,
+    "rooms": 2,
+    "floor": "9 piętro",
+    "desc": "",
+    "photos": [
+      "img/oferty/6885395.jpg"
+    ]
+  },
+  {
+    "id": "AGMA-LW-33",
+    "type": "lokal",
+    "deal": "wynajem",
+    "location": "Częstochowa",
+    "price": 1300,
+    "area": 18,
+    "rooms": null,
+    "floor": null,
+    "desc": "",
+    "photos": [
+      "img/oferty/6885404.jpg"
+    ]
+  }
+]
