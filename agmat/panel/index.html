@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Panel agenta – AGMAT</title>
+  <link rel="icon" href="../img/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --dark: #16161c;
+      --dark-2: #26262e;
+      --gold: #c9a456;
+      --gold-dark: #a3812f;
+      --bg: #f5f4f1;
+      --white: #ffffff;
+      --text: #1f1f24;
+      --muted: #6b6b74;
+      --line: #e2e0da;
+      --red: #c0392b;
+      --green: #2e7d4f;
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Inter", system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; font-size: 16px; }
+    h1, h2, h3 { font-family: "Poppins", sans-serif; line-height: 1.2; }
+    [hidden] { display: none !important; }
+    button { font: inherit; }
+
+    .topbar { background: var(--dark); color: var(--white); position: sticky; top: 0; z-index: 10; }
+    .topbar__inner { max-width: 760px; margin: 0 auto; padding: .7rem 16px; display: flex; align-items: center; gap: .8rem; }
+    .topbar img { width: 56px; height: auto; }
+    .topbar h1 { font-size: 1rem; flex: 1; }
+    .topbar h1 small { display: block; font-family: "Inter", sans-serif; font-weight: 400; color: rgba(255,255,255,.6); font-size: .78rem; }
+    .topbar a, .topbar button { color: var(--gold); background: none; border: 0; text-decoration: none; font-size: .9rem; font-weight: 600; cursor: pointer; padding: .4rem; }
+
+    main { max-width: 760px; margin: 0 auto; padding: 1.5rem 16px 6rem; }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; border: 2px solid var(--gold); background: var(--gold); color: var(--dark);
+      font-weight: 600; border-radius: 12px; padding: .9rem 1.4rem; cursor: pointer; text-decoration: none; font-size: 1rem; min-height: 52px; }
+    .btn:hover { background: var(--gold-dark); border-color: var(--gold-dark); }
+    .btn:disabled { opacity: .5; cursor: not-allowed; }
+    .btn--big { width: 100%; font-size: 1.1rem; min-height: 60px; }
+    .btn--ghost { background: var(--white); border-color: var(--line); color: var(--text); }
+    .btn--ghost:hover { background: var(--bg); border-color: var(--muted); }
+    .btn--danger { background: var(--red); border-color: var(--red); color: var(--white); }
+    .btn--danger:hover { background: #a2281b; border-color: #a2281b; }
+    .btn--small { min-height: 42px; padding: .5rem .9rem; font-size: .9rem; }
+
+    .card { background: var(--white); border-radius: var(--radius); padding: 1.5rem; box-shadow: 0 2px 10px rgba(0,0,0,.05); }
+    .muted { color: var(--muted); font-size: .9rem; }
+    .msg { padding: .9rem 1rem; border-radius: 10px; margin-bottom: 1rem; font-size: .95rem; }
+    .msg--error { background: #fdecea; color: #8a1f14; }
+    .msg--ok { background: #e7f4ec; color: #1d5a37; }
+
+    /* logowanie */
+    .login { display: grid; gap: 1rem; }
+    .login h2 { font-size: 1.4rem; }
+    details { background: var(--bg); border-radius: 10px; padding: .8rem 1rem; font-size: .92rem; }
+    details summary { cursor: pointer; font-weight: 600; }
+    details ol { margin: .8rem 0 0 1.2rem; display: grid; gap: .4rem; }
+
+    /* lista ofert */
+    .list-head { display: flex; justify-content: space-between; align-items: baseline; margin: 1.8rem 0 .8rem; }
+    .list-head h2 { font-size: 1.2rem; }
+    .items { display: grid; gap: .8rem; }
+    .item { background: var(--white); border-radius: var(--radius); display: grid; grid-template-columns: 96px 1fr; gap: .9rem; padding: .7rem; align-items: center; box-shadow: 0 1px 6px rgba(0,0,0,.05); }
+    .item img { width: 96px; height: 76px; object-fit: cover; border-radius: 10px; background: var(--dark); }
+    .item h3 { font-size: .98rem; }
+    .item p { font-size: .88rem; color: var(--muted); }
+    .item strong { font-size: 1rem; color: var(--text); }
+    .item__actions { grid-column: 1 / -1; display: flex; gap: .5rem; flex-wrap: wrap; }
+    .item__actions .btn { flex: 1; }
+    .item__confirm { grid-column: 1 / -1; background: #fdecea; border-radius: 10px; padding: .8rem; display: grid; gap: .6rem; }
+    .item__confirm div { display: flex; gap: .5rem; }
+    .item__confirm .btn { flex: 1; }
+
+    /* formularz */
+    .form { display: grid; gap: 1.3rem; }
+    .form h2 { font-size: 1.4rem; }
+    .field { display: grid; gap: .4rem; }
+    .field > span, .field legend { font-weight: 600; font-size: .95rem; }
+    .field small { color: var(--muted); font-size: .82rem; }
+    fieldset { border: 0; }
+    input[type=text], input[type=password], textarea {
+      font: inherit; width: 100%; padding: .85rem .9rem; border: 1.5px solid var(--line); border-radius: 10px; background: var(--white); min-height: 52px; }
+    textarea { min-height: 140px; resize: vertical; }
+    input:focus, textarea:focus { outline: 2px solid var(--gold); border-color: transparent; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .choices { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .4rem; }
+    .choices label { flex: 1 1 auto; }
+    .choices input { position: absolute; opacity: 0; pointer-events: none; }
+    .choices span { display: block; text-align: center; padding: .8rem .9rem; border: 1.5px solid var(--line); border-radius: 10px; background: var(--white); cursor: pointer; font-weight: 500; min-height: 50px; }
+    .choices input:checked + span { background: var(--dark); color: var(--gold); border-color: var(--dark); font-weight: 600; }
+    .choices input:focus-visible + span { outline: 2px solid var(--gold); }
+
+    .photos { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: .7rem; }
+    .photo { position: relative; border-radius: 10px; overflow: hidden; background: var(--dark); aspect-ratio: 4 / 3; }
+    .photo img { width: 100%; height: 100%; object-fit: cover; }
+    .photo__main { position: absolute; top: 6px; left: 6px; background: var(--gold); color: var(--dark); font-size: .72rem; font-weight: 700; padding: .2rem .5rem; border-radius: 999px; }
+    .photo__bar { position: absolute; inset: auto 0 0 0; display: flex; justify-content: space-between; padding: 6px; gap: 6px; }
+    .photo__bar button { border: 0; border-radius: 8px; background: rgba(0,0,0,.65); color: var(--white); font-size: .78rem; padding: .4rem .55rem; cursor: pointer; }
+    .photo__bar button.remove { margin-left: auto; background: rgba(192,57,43,.9); }
+    .add-photos { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .3rem; aspect-ratio: 4 / 3;
+      border: 2px dashed var(--gold); border-radius: 10px; background: #fbf7ee; color: var(--gold-dark); font-weight: 600; cursor: pointer; text-align: center; padding: .5rem; }
+    .add-photos b { font-size: 1.8rem; line-height: 1; }
+
+    .form__actions { display: grid; gap: .6rem; }
+
+    /* zapisywanie */
+    .overlay { position: fixed; inset: 0; background: rgba(22,22,28,.85); display: grid; place-items: center; z-index: 50; padding: 16px; }
+    .overlay .card { text-align: center; max-width: 380px; width: 100%; display: grid; gap: 1rem; justify-items: center; }
+    .spinner { width: 46px; height: 46px; border-radius: 50%; border: 4px solid var(--line); border-top-color: var(--gold); animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .done-icon { font-size: 3rem; }
+    .bar { width: 100%; height: 8px; background: var(--line); border-radius: 999px; overflow: hidden; }
+    .bar div { height: 100%; background: var(--gold); width: 0; transition: width .3s; }
+
+    @media (max-width: 480px) { .row { grid-template-columns: 1fr; } }
+    @media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 3s; } }
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <img src="../img/logo.svg" alt="AGMAT">
+    <h1>Panel agenta<small>Dodawanie ofert na stronę</small></h1>
+    <a href="../" target="_blank" rel="noopener">Strona ↗</a>
+    <button type="button" id="logout" hidden>Wyloguj</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ LOGOWANIE ============ -->
+  <section id="view-login" class="card login" hidden>
+    <h2>Zaloguj się</h2>
+    <p class="muted">Wklej klucz dostępu. Wystarczy zrobić to raz – telefon go zapamięta.</p>
+    <div id="login-msg"></div>
+    <label class="field">
+      <span>Klucz dostępu</span>
+      <input type="password" id="token" autocomplete="off" placeholder="github_pat_…">
+    </label>
+    <button class="btn btn--big" id="login-btn">Zaloguj</button>
+    <details>
+      <summary>Skąd wziąć klucz? (instrukcja dla właściciela strony)</summary>
+      <ol>
+        <li>Zaloguj się na github.com na konto, do którego należy strona.</li>
+        <li>Wejdź w: zdjęcie profilowe → <b>Settings</b> → na dole <b>Developer settings</b> → <b>Personal access tokens</b> → <b>Fine-grained tokens</b> → <b>Generate new token</b>.</li>
+        <li><b>Token name:</b> np. „Panel AGMAT”. <b>Expiration:</b> wybierz najdłuższy możliwy termin.</li>
+        <li><b>Repository access:</b> <i>Only select repositories</i> → wybierz <b>projekty-1-</b>.</li>
+        <li><b>Permissions → Repository permissions → Contents:</b> ustaw <b>Read and write</b>.</li>
+        <li>Kliknij <b>Generate token</b>, skopiuj klucz i wklej go tutaj.</li>
+      </ol>
+      <p class="muted" style="margin-top:.6rem">Klucz traktuj jak hasło – nie wysyłaj go nikomu poza agentem.</p>
+    </details>
+  </section>
+
+  <!-- ============ LISTA OFERT ============ -->
+  <section id="view-list" hidden>
+    <div id="list-msg"></div>
+    <button class="btn btn--big" id="add-btn">＋ Dodaj nową ofertę</button>
+    <div class="list-head">
+      <h2>Oferty na stronie</h2>
+      <span class="muted" id="count"></span>
+    </div>
+    <div class="items" id="items"></div>
+  </section>
+
+  <!-- ============ FORMULARZ ============ -->
+  <section id="view-form" hidden>
+    <form class="card form" id="form" novalidate>
+      <h2 id="form-title">Nowa oferta</h2>
+      <div id="form-msg"></div>
+
+      <fieldset class="field">
+        <legend>Co to jest?</legend>
+        <div class="choices">
+          <label><input type="radio" name="type" value="mieszkanie" checked><span>🏢 Mieszkanie</span></label>
+          <label><input type="radio" name="type" value="dom"><span>🏠 Dom</span></label>
+          <label><input type="radio" name="type" value="lokal"><span>🏪 Lokal</span></label>
+          <label><input type="radio" name="type" value="dzialka"><span>🌳 Działka</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="field">
+        <legend>Sprzedaż czy wynajem?</legend>
+        <div class="choices">
+          <label><input type="radio" name="deal" value="sprzedaz" checked><span>Sprzedaż</span></label>
+          <label><input type="radio" name="deal" value="wynajem"><span>Wynajem</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="field">
+        <legend>Zdjęcia</legend>
+        <small>Pierwsze zdjęcie będzie główne. Możesz dodać kilka naraz.</small>
+        <div class="photos" id="photos"></div>
+        <input type="file" id="file" accept="image/*" multiple hidden>
+      </fieldset>
+
+      <label class="field">
+        <span id="price-label">Cena (zł)</span>
+        <input type="text" name="price" inputmode="decimal" placeholder="np. 365 000" required>
+      </label>
+
+      <label class="field">
+        <span>Lokalizacja</span>
+        <input type="text" name="location" placeholder="np. Częstochowa, Wrzosowiak" required>
+      </label>
+
+      <div class="row">
+        <label class="field">
+          <span>Powierzchnia (m²)</span>
+          <input type="text" name="area" inputmode="decimal" placeholder="np. 54,5">
+        </label>
+        <label class="field" id="f-rooms">
+          <span>Liczba pokoi</span>
+          <input type="text" name="rooms" inputmode="numeric" placeholder="np. 3">
+        </label>
+      </div>
+
+      <label class="field" id="f-floor">
+        <span>Piętro</span>
+        <input type="text" name="floor" placeholder="np. 2 piętro, parter">
+      </label>
+
+      <label class="field">
+        <span>Opis</span>
+        <textarea name="desc" placeholder="Np. Słoneczne mieszkanie po remoncie, blisko szkoły i sklepów. Balkon, piwnica, miejsce parkingowe."></textarea>
+      </label>
+
+      <div class="form__actions">
+        <button type="submit" class="btn btn--big" id="save-btn">✓ Opublikuj ofertę</button>
+        <button type="button" class="btn btn--ghost" id="cancel-btn">Anuluj</button>
+      </div>
+    </form>
+  </section>
+
+  <div class="overlay" id="overlay" hidden>
+    <div class="card">
+      <div class="spinner" id="ov-spinner"></div>
+      <div class="done-icon" id="ov-done" hidden>✅</div>
+      <h3 id="ov-title">Zapisuję…</h3>
+      <p class="muted" id="ov-text"></p>
+      <div class="bar" id="ov-bar"><div></div></div>
+      <button class="btn btn--big" id="ov-ok" hidden>Wróć do listy ofert</button>
+    </div>
+  </div>
+</main>
+
+<script>
+// ============================================================
+//  USTAWIENIA – gdzie leży strona na GitHubie
+// ============================================================
+const OWNER = "mateuszmeblemirage";
+const REPO = "projekty-1-";
+const BRANCH = "main";
+const SITE_DIR = "agmat/";               // folder strony w repozytorium
+const DATA_FILE = SITE_DIR + "oferty.json";
+const PHOTO_DIR = "img/oferty/";         // względem folderu strony
+const MAX_PHOTO = 1600;                  // max szerokość/wysokość zdjęcia w px
+
+const TYPE_NAMES = { mieszkanie: "Mieszkanie", dom: "Dom", lokal: "Lokal", dzialka: "Działka" };
+const DEAL_NAMES = { sprzedaz: "na sprzedaż", wynajem: "na wynajem" };
+const ID_LETTERS = { mieszkanie: "M", dom: "D", lokal: "L", dzialka: "G", sprzedaz: "S", wynajem: "W" };
+
+const $ = (id) => document.getElementById(id);
+let token = "";
+let offers = [];
+let dataSha = "";
+let editingId = null;     // null = nowa oferta
+let photos = [];          // { path } (istniejące) lub { data, preview } (nowe)
+
+// ---------- pamięć klucza na urządzeniu ----------
+function saveToken(t) { try { localStorage.setItem("agmat-token", t); } catch (e) {} }
+function loadToken() { try { return localStorage.getItem("agmat-token") || ""; } catch (e) { return ""; } }
+function clearToken() { try { localStorage.removeItem("agmat-token"); } catch (e) {} }
+
+// ---------- GitHub API ----------
+async function api(path, options = {}) {
+  const res = await fetch("https://api.github.com" + path, {
+    ...options,
+    headers: {
+      Authorization: "Bearer " + token,
+      Accept: "application/vnd.github+json",
+      "X-GitHub-Api-Version": "2022-11-28",
+      ...(options.body ? { "Content-Type": "application/json" } : {}),
+    },
+  });
+  if (!res.ok) {
+    const err = new Error("HTTP " + res.status);
+    err.status = res.status;
+    throw err;
+  }
+  return res.status === 204 ? null : res.json();
+}
+const contentsUrl = (p) => `/repos/${OWNER}/${REPO}/contents/${p.split("/").map(encodeURIComponent).join("/")}`;
+
+function toBase64Utf8(text) {
+  const bytes = new TextEncoder().encode(text);
+  let bin = "";
+  bytes.forEach((b) => (bin += String.fromCharCode(b)));
+  return btoa(bin);
+}
+function fromBase64Utf8(b64) {
+  const bin = atob(b64.replace(/\s/g, ""));
+  return new TextDecoder().decode(Uint8Array.from(bin, (c) => c.charCodeAt(0)));
+}
+
+async function loadOffers() {
+  const file = await api(contentsUrl(DATA_FILE) + "?ref=" + BRANCH + "&t=" + Date.now());
+  dataSha = file.sha;
+  offers = JSON.parse(fromBase64Utf8(file.content));
+}
+async function putFile(path, base64, message, sha) {
+  return api(contentsUrl(path), {
+    method: "PUT",
+    body: JSON.stringify({ message, content: base64, branch: BRANCH, ...(sha ? { sha } : {}) }),
+  });
+}
+async function deleteFile(path, message) {
+  const info = await api(contentsUrl(path) + "?ref=" + BRANCH);
+  await api(contentsUrl(path), { method: "DELETE", body: JSON.stringify({ message, sha: info.sha, branch: BRANCH }) });
+}
+
+function errorText(e) {
+  if (e.status === 401) return "Klucz dostępu jest nieprawidłowy albo wygasł. Wyloguj się i wklej nowy klucz.";
+  if (e.status === 403 || e.status === 404) return "Klucz nie ma uprawnień do zapisu. Sprawdź, czy ma dostęp do repozytorium i „Contents: Read and write”.";
+  if (e.status === 409 || e.status === 422) return "Oferty zostały w międzyczasie zmienione (np. na innym telefonie). Odśwież stronę i spróbuj jeszcze raz.";
+  return "Nie udało się połączyć. Sprawdź internet i spróbuj ponownie.";
+}
+function showMsg(el, text, type = "error") { $(el).innerHTML = text ? `<div class="msg msg--${type}">${text}</div>` : ""; }
+
+// ---------- widoki ----------
+function show(view) {
+  ["login", "list", "form"].forEach((v) => ($("view-" + v).hidden = v !== view));
+  $("logout").hidden = view === "login";
+  window.scrollTo(0, 0);
+}
+
+function photoUrl(path) {
+  return `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${SITE_DIR}${path}`;
+}
+function esc(t) { return String(t ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+function priceText(o) { return Number(o.price).toLocaleString("pl-PL") + " zł" + (o.deal === "wynajem" ? " / mies." : ""); }
+
+function renderList() {
+  $("count").textContent = offers.length + (offers.length === 1 ? " oferta" : offers.length > 1 && offers.length < 5 ? " oferty" : " ofert");
+  $("items").innerHTML = offers.length ? offers.map((o) => `
+    <div class="item" data-id="${esc(o.id)}">
+      <img src="${o.photos && o.photos[0] ? esc(photoUrl(o.photos[0])) : "../img/logo.svg"}" alt="">
+      <div>
+        <h3>${esc(TYPE_NAMES[o.type])} ${esc(DEAL_NAMES[o.deal])}</h3>
+        <p>${esc(o.location)}</p>
+        <strong>${priceText(o)}</strong>
+      </div>
+      <div class="item__actions">
+        <button class="btn btn--ghost btn--small" data-action="edit">✏️ Edytuj</button>
+        <button class="btn btn--ghost btn--small" data-action="ask-delete">🗑️ Usuń</button>
+      </div>
+    </div>`).join("") : `<p class="muted">Nie ma jeszcze żadnych ofert. Kliknij „Dodaj nową ofertę”.</p>`;
+}
+
+$("items").addEventListener("click", async (e) => {
+  const btn = e.target.closest("button[data-action]");
+  if (!btn) return;
+  const item = btn.closest(".item");
+  const offer = offers.find((o) => o.id === item.dataset.id);
+  const action = btn.dataset.action;
+
+  if (action === "edit") openForm(offer);
+  if (action === "ask-delete") {
+    item.querySelector(".item__actions").hidden = true;
+    item.insertAdjacentHTML("beforeend", `
+      <div class="item__confirm">
+        <b>Usunąć tę ofertę ze strony?</b>
+        <div>
+          <button class="btn btn--danger btn--small" data-action="delete">Tak, usuń</button>
+          <button class="btn btn--ghost btn--small" data-action="cancel-delete">Nie</button>
+        </div>
+      </div>`);
+  }
+  if (action === "cancel-delete") renderList();
+  if (action === "delete") await removeOffer(offer);
+});
+
+// ---------- formularz ----------
+function openForm(offer) {
+  editingId = offer ? offer.id : null;
+  const f = $("form");
+  f.reset();
+  showMsg("form-msg", "");
+  $("form-title").textContent = offer ? "Edytuj ofertę " + offer.id : "Nowa oferta";
+  $("save-btn").textContent = offer ? "✓ Zapisz zmiany" : "✓ Opublikuj ofertę";
+  if (offer) {
+    f.type.value = offer.type;
+    f.deal.value = offer.deal;
+    ["price", "location", "area", "rooms", "floor", "desc"].forEach((k) => (f[k].value = offer[k] ?? ""));
+  }
+  photos = offer ? (offer.photos || []).map((path) => ({ path })) : [];
+  renderPhotos();
+  updateFields();
+  show("form");
+}
+
+function updateFields() {
+  const f = $("form");
+  const type = f.type.value;
+  $("f-rooms").hidden = type === "dzialka" || type === "lokal";
+  $("f-floor").hidden = type === "dzialka" || type === "dom";
+  $("price-label").textContent = f.deal.value === "wynajem" ? "Cena najmu (zł / miesiąc)" : "Cena (zł)";
+}
+$("form").addEventListener("change", (e) => { if (e.target.name === "type" || e.target.name === "deal") updateFields(); });
+
+function renderPhotos() {
+  $("photos").innerHTML = photos.map((p, i) => `
+    <div class="photo">
+      <img src="${p.preview || esc(photoUrl(p.path))}" alt="Zdjęcie ${i + 1}">
+      ${i === 0 ? `<span class="photo__main">★ Główne</span>` : ""}
+      <div class="photo__bar">
+        ${i > 0 ? `<button type="button" data-main="${i}">☆ Ustaw jako główne</button>` : ""}
+        <button type="button" class="remove" data-remove="${i}" aria-label="Usuń zdjęcie">✕</button>
+      </div>
+    </div>`).join("") +
+    `<label class="add-photos" for="file"><b>📷</b>Dodaj zdjęcia</label>`;
+}
+$("photos").addEventListener("click", (e) => {
+  const main = e.target.closest("[data-main]");
+  const remove = e.target.closest("[data-remove]");
+  if (main) { const [p] = photos.splice(+main.dataset.main, 1); photos.unshift(p); renderPhotos(); }
+  if (remove) { photos.splice(+remove.dataset.remove, 1); renderPhotos(); }
+});
+
+// zmniejsza zdjęcie z telefonu, żeby strona szybko się ładowała
+function shrinkImage(file) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      const scale = Math.min(1, MAX_PHOTO / Math.max(img.width, img.height));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+      URL.revokeObjectURL(url);
+      const dataUrl = canvas.toDataURL("image/jpeg", 0.82);
+      resolve({ preview: dataUrl, data: dataUrl.split(",")[1] });
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("bad image")); };
+    img.src = url;
+  });
+}
+$("file").addEventListener("change", async (e) => {
+  const files = [...e.target.files];
+  e.target.value = "";
+  for (const file of files) {
+    try { photos.push(await shrinkImage(file)); }
+    catch { showMsg("form-msg", `Nie udało się wczytać pliku „${esc(file.name)}”. Wybierz zdjęcie w formacie JPG lub PNG.`); }
+  }
+  renderPhotos();
+});
+
+$("cancel-btn").addEventListener("click", () => show("list"));
+
+function nextId(type, deal) {
+  const max = offers.reduce((m, o) => Math.max(m, parseInt(String(o.id).split("-").pop(), 10) || 0), 0);
+  return `AGMA-${ID_LETTERS[type]}${ID_LETTERS[deal]}-${max + 1}`;
+}
+
+// ---------- zapisywanie ----------
+function overlay(title, text, progress) {
+  $("overlay").hidden = false;
+  $("ov-spinner").hidden = false;
+  $("ov-done").hidden = true;
+  $("ov-ok").hidden = true;
+  $("ov-bar").hidden = progress == null;
+  $("ov-title").textContent = title;
+  $("ov-text").textContent = text || "";
+  if (progress != null) $("ov-bar").firstElementChild.style.width = Math.round(progress * 100) + "%";
+}
+function overlayDone(title, text) {
+  overlay(title, text);
+  $("ov-spinner").hidden = true;
+  $("ov-done").hidden = false;
+  $("ov-ok").hidden = false;
+  $("ov-bar").hidden = true;
+}
+$("ov-ok").addEventListener("click", () => { $("overlay").hidden = true; renderList(); show("list"); });
+
+$("form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const f = e.target;
+  const num = (v) => {
+    const clean = String(v).replace(/\s|zł|m²|m2/gi, "").replace(",", ".");
+    return clean === "" || isNaN(Number(clean)) ? null : Number(clean);
+  };
+
+  // sprawdzenie pól
+  const problems = [];
+  if (!(num(f.price.value) > 0)) problems.push("cenę (same cyfry, np. 365 000)");
+  if (f.area.value.trim() && num(f.area.value) == null) problems.push("powierzchnię (np. 54,5)");
+  if (!f.location.value.trim()) problems.push("lokalizację");
+  if (!photos.length) problems.push("przynajmniej jedno zdjęcie");
+  if (problems.length) {
+    showMsg("form-msg", "Uzupełnij: " + problems.join(", ") + ".");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    return;
+  }
+
+  const type = f.type.value;
+  const deal = f.deal.value;
+  try {
+    overlay("Zapisuję ofertę…", "Pobieram aktualną listę ofert", 0);
+    await loadOffers(); // najświeższa wersja, żeby nic nie nadpisać
+
+    const old = editingId ? offers.find((o) => o.id === editingId) : null;
+    const id = editingId || nextId(type, deal);
+    const newPhotos = photos.filter((p) => p.data);
+    const paths = [];
+    let n = 0;
+    for (const p of photos) {
+      if (p.path) { paths.push(p.path); continue; }
+      n++;
+      overlay("Wysyłam zdjęcia…", `Zdjęcie ${n} z ${newPhotos.length}`, n / (newPhotos.length + 1));
+      const path = `${PHOTO_DIR}${id.toLowerCase()}-${Date.now()}-${n}.jpg`;
+      await putFile(SITE_DIR + path, p.data, `Zdjęcie do oferty ${id}`);
+      paths.push(path);
+    }
+
+    const offer = {
+      id, type, deal,
+      location: f.location.value.trim(),
+      price: num(f.price.value),
+      area: num(f.area.value),
+      rooms: $("f-rooms").hidden ? null : num(f.rooms.value),
+      floor: $("f-floor").hidden ? null : f.floor.value.trim() || null,
+      desc: f.desc.value.trim(),
+      photos: paths,
+    };
+    if (old) offers[offers.indexOf(old)] = offer;
+    else offers.unshift(offer);
+
+    overlay("Zapisuję ofertę…", "Ostatni krok", newPhotos.length / (newPhotos.length + 1));
+    const res = await putFile(DATA_FILE, toBase64Utf8(JSON.stringify(offers, null, 2) + "\n"),
+      (old ? "Zmiana oferty " : "Nowa oferta ") + id, dataSha);
+    dataSha = res.content.sha;
+
+    // sprzątanie: usuwamy zdjęcia, które agent wyrzucił z oferty
+    if (old) {
+      for (const p of (old.photos || []).filter((p) => !paths.includes(p) && p.startsWith(PHOTO_DIR))) {
+        try { await deleteFile(SITE_DIR + p, `Usunięcie zdjęcia z oferty ${id}`); } catch (err) {}
+      }
+    }
+
+    overlayDone(old ? "Zmiany zapisane!" : "Oferta opublikowana!", "Pojawi się na stronie za około 1–2 minuty.");
+  } catch (err) {
+    $("overlay").hidden = true;
+    showMsg("form-msg", errorText(err));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+});
+
+async function removeOffer(offer) {
+  try {
+    overlay("Usuwam ofertę…", "");
+    await loadOffers();
+    offers = offers.filter((o) => o.id !== offer.id);
+    const res = await putFile(DATA_FILE, toBase64Utf8(JSON.stringify(offers, null, 2) + "\n"), "Usunięcie oferty " + offer.id, dataSha);
+    dataSha = res.content.sha;
+    for (const p of (offer.photos || []).filter((p) => p.startsWith(PHOTO_DIR))) {
+      try { await deleteFile(SITE_DIR + p, `Usunięcie zdjęcia z oferty ${offer.id}`); } catch (err) {}
+    }
+    overlayDone("Oferta usunięta", "Zniknie ze strony za około 1–2 minuty.");
+  } catch (err) {
+    $("overlay").hidden = true;
+    renderList();
+    showMsg("list-msg", errorText(err));
+  }
+}
+
+$("add-btn").addEventListener("click", () => openForm(null));
+
+// ---------- logowanie ----------
+async function start() {
+  try {
+    await loadOffers();
+    renderList();
+    show("list");
+  } catch (err) {
+    if (err.status === 401 || err.status === 403 || err.status === 404) {
+      clearToken();
+      show("login");
+      showMsg("login-msg", errorText(err));
+    } else {
+      show("list");
+      showMsg("list-msg", errorText(err));
+    }
+  }
+}
+$("login-btn").addEventListener("click", async () => {
+  token = $("token").value.trim();
+  if (!token) return showMsg("login-msg", "Wklej klucz dostępu.");
+  $("login-btn").disabled = true;
+  $("login-btn").textContent = "Sprawdzam…";
+  try {
+    const repo = await api(`/repos/${OWNER}/${REPO}`);
+    if (!repo.permissions || !repo.permissions.push) throw Object.assign(new Error(), { status: 403 });
+    saveToken(token);
+    showMsg("login-msg", "");
+    await start();
+  } catch (err) {
+    showMsg("login-msg", errorText(err));
+  }
+  $("login-btn").disabled = false;
+  $("login-btn").textContent = "Zaloguj";
+});
+$("token").addEventListener("keydown", (e) => { if (e.key === "Enter") $("login-btn").click(); });
+$("logout").addEventListener("click", () => { clearToken(); token = ""; $("token").value = ""; show("login"); });
+
+token = loadToken();
+if (token) start(); else show("login");
+</script>
+</body>
+</html>
