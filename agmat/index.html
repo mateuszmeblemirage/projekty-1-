@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biuro Nieruchomości AGMAT – Częstochowa</title>
+  <meta name="description" content="Biuro Nieruchomości AGMAT w Częstochowie. Sprzedaż i wynajem mieszkań, domów i lokali, wycena nieruchomości oraz pomoc w uzyskaniu kredytu.">
+  <link rel="icon" href="img/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ========== NAGŁÓWEK ========== -->
+  <header class="header">
+    <div class="container header__inner">
+      <a href="#start" class="brand">
+        <img src="img/logo.png" alt="Logo AGMAT" width="48" height="48">
+        <span class="brand__text">
+          <strong>AGMAT</strong>
+          <small>Biuro Nieruchomości</small>
+        </span>
+      </a>
+
+      <button class="menu-toggle" aria-label="Otwórz menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="nav">
+        <a href="#uslugi">Usługi</a>
+        <a href="#oferty">Oferty</a>
+        <a href="#o-nas">O nas</a>
+        <a href="#kontakt">Kontakt</a>
+        <a href="tel:+48728474423" class="btn btn--small">📞 728 474 423</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ========== HERO ========== -->
+    <section class="hero" id="start">
+      <div class="container hero__inner">
+        <div class="hero__text">
+          <p class="eyebrow">Częstochowa i okolice</p>
+          <h1>Znajdziemy dla Ciebie <span>miejsce do życia</span></h1>
+          <p class="hero__lead">
+            Sprzedajesz, kupujesz, wynajmujesz? Przeprowadzimy Cię przez cały proces –
+            od wyceny, przez prezentację oferty, aż po podpisanie umowy u notariusza.
+          </p>
+          <div class="hero__buttons">
+            <a href="#oferty" class="btn">Zobacz oferty</a>
+            <a href="#kontakt" class="btn btn--ghost">Bezpłatna konsultacja</a>
+          </div>
+          <ul class="hero__facts">
+            <li><strong>Sprzedaż</strong> i wynajem</li>
+            <li><strong>Wycena</strong> nieruchomości</li>
+            <li><strong>Pomoc</strong> z kredytem</li>
+          </ul>
+        </div>
+        <div class="hero__image">
+          <img src="img/hero.webp" alt="Nowoczesny dom jednorodzinny z ogrodem">
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== USŁUGI ========== -->
+    <section class="section" id="uslugi">
+      <div class="container">
+        <p class="eyebrow">Czym się zajmujemy</p>
+        <h2>Kompleksowa obsługa nieruchomości</h2>
+
+        <div class="services">
+          <article class="service">
+            <div class="service__icon">🏠</div>
+            <h3>Sprzedaż</h3>
+            <p>Przygotujemy ofertę, zrobimy zdjęcia, opublikujemy ogłoszenia na portalach i zorganizujemy prezentacje. Zadbamy o formalności aż do aktu notarialnego.</p>
+          </article>
+          <article class="service">
+            <div class="service__icon">🔑</div>
+            <h3>Wynajem</h3>
+            <p>Znajdziemy rzetelnego najemcę lub mieszkanie dla Ciebie. Pomożemy przygotować umowę najmu i protokół zdawczo-odbiorczy.</p>
+          </article>
+          <article class="service">
+            <div class="service__icon">📊</div>
+            <h3>Wycena</h3>
+            <p>Określimy realną cenę rynkową nieruchomości na podstawie aktualnych transakcji w Częstochowie i okolicy, żeby oferta nie „wisiała” miesiącami.</p>
+          </article>
+          <article class="service">
+            <div class="service__icon">💳</div>
+            <h3>Pomoc z kredytem</h3>
+            <p>Pomożemy w uzyskaniu kredytu hipotecznego – porównamy oferty banków i przeprowadzimy przez cały proces od wniosku do decyzji.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== OFERTY ========== -->
+    <section class="section section--alt" id="oferty">
+      <div class="container">
+        <p class="eyebrow">Aktualne ogłoszenia</p>
+        <h2>Nasze oferty</h2>
+
+        <div class="filters" role="group" aria-label="Filtruj oferty">
+          <button class="filter is-active" data-filter="all">Wszystkie</button>
+          <button class="filter" data-filter="sprzedaz">Sprzedaż</button>
+          <button class="filter" data-filter="wynajem">Wynajem</button>
+          <button class="filter" data-filter="mieszkanie">Mieszkania</button>
+          <button class="filter" data-filter="dom">Domy</button>
+          <button class="filter" data-filter="lokal">Lokale</button>
+        </div>
+
+        <div class="offers" id="offers-list">
+          <!-- Karty ofert wstawia plik script.js -->
+        </div>
+
+        <p class="offers__note">
+          Nie znalazłeś nic dla siebie? <a href="#kontakt">Napisz, czego szukasz</a> – powiadomimy Cię, gdy pojawi się pasująca oferta.
+        </p>
+      </div>
+    </section>
+
+    <!-- ========== JAK PRACUJEMY ========== -->
+    <section class="section">
+      <div class="container">
+        <p class="eyebrow">Krok po kroku</p>
+        <h2>Jak pracujemy</h2>
+        <ol class="steps">
+          <li>
+            <span class="steps__nr">1</span>
+            <h3>Rozmowa</h3>
+            <p>Dzwonisz lub piszesz – poznajemy Twoje potrzeby i odpowiadamy na pytania. Bez zobowiązań.</p>
+          </li>
+          <li>
+            <span class="steps__nr">2</span>
+            <h3>Plan działania</h3>
+            <p>Wyceniamy nieruchomość albo szukamy ofert dopasowanych do Twojego budżetu.</p>
+          </li>
+          <li>
+            <span class="steps__nr">3</span>
+            <h3>Prezentacje i negocjacje</h3>
+            <p>Umawiamy spotkania, pokazujemy nieruchomości i dbamy o dobre warunki transakcji.</p>
+          </li>
+          <li>
+            <span class="steps__nr">4</span>
+            <h3>Finał</h3>
+            <p>Kompletujemy dokumenty, pomagamy z kredytem i jesteśmy z Tobą przy podpisaniu umowy.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ========== O NAS ========== -->
+    <section class="section section--dark" id="o-nas">
+      <div class="container about">
+        <div class="about__text">
+          <p class="eyebrow">O nas</p>
+          <h2>Lokalne biuro, osobiste podejście</h2>
+          <p>
+            Biuro Nieruchomości AGMAT to częstochowskie biuro prowadzone przez
+            <strong>Agnieszkę Kaczmarzyk</strong>. Znamy tutejszy rynek – od Wrzosowiaka i Ostatniego Grosza
+            po okoliczne gminy – i wiemy, ile naprawdę są warte nieruchomości w poszczególnych dzielnicach.
+          </p>
+          <p>
+            Nie jesteśmy dużą siecią. Każdym klientem zajmujemy się osobiście: odbieramy telefon,
+            odpowiadamy na pytania i trzymamy rękę na pulsie aż do przekazania kluczy.
+            Dzięki temu sprzedaż, zakup czy wynajem przebiegają spokojnie i bez niespodzianek.
+          </p>
+        </div>
+        <div class="about__card">
+          <img src="img/logo.png" alt="" width="96" height="96">
+          <h3>Agnieszka Kaczmarzyk</h3>
+          <p>Manager / Agent nieruchomości</p>
+          <a href="tel:+48728474423" class="btn">📞 728 474 423</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== KONTAKT ========== -->
+    <section class="section" id="kontakt">
+      <div class="container contact">
+        <div class="contact__info">
+          <p class="eyebrow">Kontakt</p>
+          <h2>Porozmawiajmy o Twojej nieruchomości</h2>
+
+          <ul class="contact__list">
+            <li>
+              <span>📍</span>
+              <div><strong>Adres biura</strong><br>Al. Armii Krajowej 1/3, lok. 39A<br>42-202 Częstochowa</div>
+            </li>
+            <li>
+              <span>📞</span>
+              <div><strong>Telefon</strong><br><a href="tel:+48728474423">+48 728 474 423</a></div>
+            </li>
+            <li>
+              <span>✉️</span>
+              <div><strong>E-mail</strong><br><a href="mailto:agent_nieruchomosci@op.pl">agent_nieruchomosci@op.pl</a></div>
+            </li>
+            <li>
+              <span>🕘</span>
+              <div><strong>Godziny otwarcia</strong><br>Poniedziałek – piątek: 10:00 – 17:00</div>
+            </li>
+          </ul>
+
+          <iframe class="contact__map"
+            title="Mapa dojazdu do biura AGMAT"
+            src="https://maps.google.com/maps?q=Aleja%20Armii%20Krajowej%201%2C%2042-202%20Cz%C4%99stochowa&z=16&output=embed"
+            loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+
+        <form class="contact__form" id="contact-form">
+          <h3>Napisz wiadomość</h3>
+          <label>Imię i nazwisko
+            <input type="text" name="name" required>
+          </label>
+          <label>Telefon
+            <input type="tel" name="phone">
+          </label>
+          <label>Czego dotyczy wiadomość?
+            <select name="topic">
+              <option>Chcę sprzedać nieruchomość</option>
+              <option>Chcę kupić nieruchomość</option>
+              <option>Chcę wynająć / wynajmuję</option>
+              <option>Wycena nieruchomości</option>
+              <option>Pomoc z kredytem</option>
+              <option>Inne</option>
+            </select>
+          </label>
+          <label>Wiadomość
+            <textarea name="message" rows="5" required></textarea>
+          </label>
+          <button type="submit" class="btn btn--full">Wyślij wiadomość</button>
+          <p class="contact__hint">Po kliknięciu otworzy się Twój program pocztowy z gotową wiadomością.</p>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========== STOPKA ========== -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="brand brand--light">
+        <img src="img/logo.png" alt="" width="40" height="40">
+        <span class="brand__text"><strong>AGMAT</strong><small>Biuro Nieruchomości</small></span>
+      </div>
+      <p>Biuro Nieruchomości AGMAT – Agnieszka Kaczmarzyk<br>Al. Armii Krajowej 1/3, lok. 39A, 42-202 Częstochowa</p>
+      <p>© <span id="year"></span> AGMAT. Wszelkie prawa zastrzeżone.</p>
+    </div>
+  </footer>
+
+  <!-- Przycisk „Zadzwoń” widoczny na telefonach -->
+  <a href="tel:+48728474423" class="call-fab" aria-label="Zadzwoń do biura">📞</a>
+
+  <script src="script.js"></script>
+</body>
+</html>
