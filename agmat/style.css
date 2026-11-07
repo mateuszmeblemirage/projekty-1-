@@ -1,0 +1,318 @@
+/* ============================================================
+   KOLORY I USTAWIENIA – zmień tutaj, a zmieni się na całej stronie
+   (czerń i złoto z logo AGMAT na Facebooku)
+   ============================================================ */
+:root {
+  --navy: #16161c;
+  --navy-light: #26262e;
+  --orange: #c9a456;
+  --orange-dark: #a3812f;
+  --cream: #faf6f0;
+  --text: #1f2a37;
+  --muted: #5b6676;
+  --white: #ffffff;
+  --radius: 14px;
+  --shadow: 0 10px 30px rgba(22, 22, 28, 0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+
+body {
+  font-family: "Inter", system-ui, sans-serif;
+  color: var(--text);
+  background: var(--white);
+  line-height: 1.6;
+}
+
+h1, h2, h3 { font-family: "Poppins", sans-serif; line-height: 1.2; color: var(--navy); }
+h2 { font-size: clamp(1.7rem, 3.5vw, 2.4rem); margin-bottom: 2rem; }
+h3 { font-size: 1.15rem; margin-bottom: .5rem; }
+img { max-width: 100%; display: block; }
+a { color: var(--orange-dark); }
+
+.container { width: min(1140px, 100% - 32px); margin-inline: auto; }
+
+.eyebrow {
+  color: var(--orange-dark);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  font-size: .8rem;
+  margin-bottom: .5rem;
+}
+
+/* ---------- Przyciski ---------- */
+.btn {
+  display: inline-block;
+  background: var(--orange);
+  color: var(--navy);
+  font-weight: 600;
+  text-decoration: none;
+  padding: .85rem 1.6rem;
+  border-radius: 999px;
+  border: 2px solid var(--orange);
+  cursor: pointer;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: background .2s, transform .2s;
+}
+.btn:hover { background: var(--orange-dark); border-color: var(--orange-dark); transform: translateY(-2px); }
+.btn--ghost { background: transparent; color: var(--white); border-color: rgba(255,255,255,.5); }
+.btn--ghost:hover { background: rgba(255,255,255,.1); border-color: var(--white); }
+.btn--small { padding: .5rem 1.1rem; font-size: .9rem; }
+.btn--full { width: 100%; }
+
+/* ---------- Nagłówek ---------- */
+.header {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(255,255,255,.96);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 1px 0 rgba(22,22,28,.08);
+}
+.header__inner { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+
+.brand { display: flex; align-items: center; gap: .7rem; text-decoration: none; }
+.brand img { background: var(--navy); border-radius: 10px; padding: 6px 5px; width: 64px; height: auto; }
+.brand__text { display: flex; flex-direction: column; line-height: 1.1; }
+.brand__text strong { font-family: "Poppins", sans-serif; color: var(--navy); font-size: 1.25rem; letter-spacing: .05em; }
+.brand__text small { color: var(--muted); font-size: .75rem; }
+.brand--light strong { color: var(--white); }
+.brand--light small { color: rgba(255,255,255,.7); }
+
+.nav { display: flex; align-items: center; gap: 1.8rem; }
+.nav a:not(.btn) { color: var(--navy); text-decoration: none; font-weight: 500; }
+.nav a:not(.btn):hover { color: var(--orange-dark); }
+
+.menu-toggle { display: none; background: none; border: 0; cursor: pointer; padding: .5rem; }
+.menu-toggle span { display: block; width: 24px; height: 2px; background: var(--navy); margin: 5px 0; }
+
+/* ---------- Hero ---------- */
+.hero {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  color: var(--white);
+  padding: 4.5rem 0;
+  overflow: hidden;
+}
+.hero__inner { display: grid; grid-template-columns: 1.2fr 1fr; gap: 3rem; align-items: center; }
+.hero h1 { color: var(--white); font-size: clamp(2.1rem, 5vw, 3.4rem); margin-bottom: 1.2rem; }
+.hero h1 span { color: var(--orange); }
+.hero .eyebrow { color: var(--orange); }
+.hero__lead { font-size: 1.1rem; color: rgba(255,255,255,.85); max-width: 540px; margin-bottom: 2rem; }
+.hero__buttons { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+.hero__facts { list-style: none; display: flex; gap: 2rem; flex-wrap: wrap; color: rgba(255,255,255,.8); font-size: .95rem; }
+.hero__facts strong { color: var(--orange); }
+.hero__image img {
+  border-radius: 200px 200px var(--radius) var(--radius);
+  box-shadow: 0 30px 60px rgba(0,0,0,.35);
+  border: 6px solid rgba(255,255,255,.1);
+  margin-inline: auto;
+  max-height: 480px;
+  object-fit: cover;
+}
+
+/* ---------- Sekcje ---------- */
+.section { padding: 5rem 0; }
+.section--alt { background: var(--cream); }
+.section--dark { background: var(--navy); color: rgba(255,255,255,.88); }
+.section--dark h2, .section--dark h3 { color: var(--white); }
+.section--dark .eyebrow { color: var(--orange); }
+
+/* ---------- Usługi ---------- */
+.services { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+.service {
+  background: var(--white);
+  border: 1px solid rgba(22,22,28,.08);
+  border-radius: var(--radius);
+  padding: 2rem 1.5rem;
+  transition: transform .2s, box-shadow .2s;
+}
+.service:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+.service__icon {
+  width: 56px; height: 56px;
+  display: grid; place-items: center;
+  font-size: 1.6rem;
+  background: rgba(201,164,86,.18);
+  border-radius: 12px;
+  margin-bottom: 1.2rem;
+}
+.service p { color: var(--muted); font-size: .95rem; }
+
+/* ---------- Oferty ---------- */
+.filters { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 2rem; }
+.filter {
+  font: inherit; font-weight: 500;
+  border: 1px solid rgba(22,22,28,.2);
+  background: var(--white);
+  color: var(--navy);
+  padding: .5rem 1.1rem;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.filter:hover { border-color: var(--orange); }
+.filter.is-active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+
+.offers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.offer[hidden] { display: none; }
+.offer {
+  background: var(--white);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(22,22,28,.06);
+  transition: transform .2s, box-shadow .2s;
+}
+.offer:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+.offer__link { all: unset; cursor: pointer; width: 100%; box-sizing: border-box; color: inherit; text-decoration: none; display: flex; flex-direction: column; height: 100%; }
+.offer__photo { position: relative; aspect-ratio: 5 / 4; overflow: hidden; background: #e9edf2; }
+.offer__photo img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+.offer:hover .offer__photo img { transform: scale(1.05); }
+.offer__badge {
+  position: absolute; top: 12px; left: 12px;
+  font-size: .75rem; font-weight: 600;
+  padding: .3rem .8rem;
+  border-radius: 999px;
+}
+.offer__badge--sprzedaz { background: var(--orange); color: var(--navy); }
+.offer__badge--wynajem { background: var(--navy); color: var(--white); }
+.offer__body { padding: 1.2rem 1.3rem 1.3rem; display: flex; flex-direction: column; flex: 1; }
+.offer__location { color: var(--muted); font-size: .9rem; }
+.offer__specs { color: var(--text); font-size: .9rem; margin: .4rem 0 1rem; }
+.offer__footer {
+  margin-top: auto;
+  display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid rgba(22,22,28,.08);
+  padding-top: .9rem;
+}
+.offer__price { font-family: "Poppins", sans-serif; font-weight: 700; color: var(--navy); font-size: 1.15rem; }
+.offer__more { color: var(--orange-dark); font-weight: 600; font-size: .9rem; }
+.offers__note { margin-top: 2rem; text-align: center; color: var(--muted); }
+
+.btn--outline { background: transparent; color: var(--navy); border-color: var(--navy); }
+.btn--outline:hover { background: var(--navy); color: var(--white); border-color: var(--navy); }
+
+/* ---------- Okno ze szczegółami oferty ---------- */
+.modal {
+  border: 0; padding: 0; margin: auto;
+  width: min(720px, 100% - 32px); max-height: 90vh;
+  border-radius: var(--radius); overflow: auto;
+  box-shadow: 0 30px 80px rgba(0,0,0,.4);
+}
+.modal::backdrop { background: rgba(13,13,17,.75); }
+.modal img { width: 100%; aspect-ratio: 5 / 4; object-fit: cover; }
+.modal__body { padding: 1.5rem; }
+.modal__body .offer__price { font-size: 1.5rem; margin-bottom: 1rem; display: block; }
+.modal dl { display: grid; grid-template-columns: auto 1fr; gap: .4rem 1.5rem; margin-bottom: 1.2rem; }
+.modal dt { color: var(--muted); }
+.modal dd { font-weight: 600; }
+.modal__actions { display: flex; gap: .8rem; flex-wrap: wrap; }
+.modal__close {
+  position: sticky; top: 12px; float: right; margin: 12px 12px -56px 0; z-index: 2;
+  width: 44px; height: 44px; border-radius: 50%; border: 0; cursor: pointer;
+  background: var(--white); font-size: 1.1rem; box-shadow: 0 2px 8px rgba(0,0,0,.2);
+}
+
+/* ---------- Jak pracujemy ---------- */
+.steps { list-style: none; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; counter-reset: s; }
+.steps li { position: relative; padding-top: .5rem; }
+.steps__nr {
+  display: grid; place-items: center;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--navy); color: var(--orange);
+  font-family: "Poppins", sans-serif; font-weight: 700;
+  margin-bottom: 1rem;
+}
+.steps p { color: var(--muted); font-size: .95rem; }
+
+/* ---------- O nas ---------- */
+.about { display: grid; grid-template-columns: 1.5fr 1fr; gap: 3rem; align-items: center; }
+.about__text p + p { margin-top: 1rem; }
+.about__text strong { color: var(--orange); }
+.about__card {
+  background: var(--navy-light);
+  border-radius: var(--radius);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,.1);
+}
+.about__card img { margin: 0 auto 1.2rem; width: 180px; height: auto; }
+.about__card p { margin-bottom: 1.5rem; color: rgba(255,255,255,.7); }
+
+/* ---------- Kontakt ---------- */
+.contact { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+.contact__list { list-style: none; display: grid; gap: 1.2rem; margin-bottom: 2rem; }
+.contact__list li { display: flex; gap: 1rem; }
+.contact__list span { font-size: 1.3rem; }
+.contact__list a { color: var(--navy); font-weight: 600; text-decoration: none; }
+.contact__list a:hover { color: var(--orange-dark); }
+.contact__map { width: 100%; height: 260px; border: 0; border-radius: var(--radius); }
+
+.contact__form {
+  background: var(--cream);
+  padding: 2rem;
+  border-radius: var(--radius);
+  display: grid; gap: 1rem;
+}
+.contact__form label { display: grid; gap: .35rem; font-weight: 500; font-size: .9rem; color: var(--navy); }
+.contact__form input, .contact__form select, .contact__form textarea {
+  font: inherit;
+  padding: .75rem .9rem;
+  border: 1px solid rgba(22,22,28,.2);
+  border-radius: 10px;
+  background: var(--white);
+}
+.contact__form input:focus, .contact__form select:focus, .contact__form textarea:focus {
+  outline: 2px solid var(--orange); border-color: transparent;
+}
+.contact__hint { font-size: .8rem; color: var(--muted); text-align: center; }
+
+/* ---------- Stopka ---------- */
+.footer { background: #0d0d11; color: rgba(255,255,255,.65); padding: 2.5rem 0; font-size: .9rem; }
+.footer__inner { display: flex; justify-content: space-between; align-items: center; gap: 2rem; flex-wrap: wrap; }
+
+/* ---------- Przycisk „Zadzwoń” (tylko telefon) ---------- */
+.call-fab {
+  display: none;
+  position: fixed; right: 18px; bottom: 18px; z-index: 60;
+  width: 58px; height: 58px;
+  border-radius: 50%;
+  background: var(--orange);
+  place-items: center;
+  font-size: 1.5rem;
+  text-decoration: none;
+  box-shadow: 0 8px 20px rgba(0,0,0,.25);
+}
+
+/* ============================================================
+   WERSJA NA TABLET I TELEFON
+   ============================================================ */
+@media (max-width: 960px) {
+  .services, .steps { grid-template-columns: repeat(2, 1fr); }
+  .offers { grid-template-columns: repeat(2, 1fr); }
+  .hero__inner, .about, .contact { grid-template-columns: 1fr; }
+  .hero__image { display: none; }
+}
+
+@media (max-width: 760px) {
+  .menu-toggle { display: block; }
+  .nav {
+    position: absolute; top: 72px; left: 0; right: 0;
+    flex-direction: column; gap: 0;
+    background: var(--white);
+    box-shadow: 0 10px 20px rgba(0,0,0,.08);
+    max-height: 0; overflow: hidden;
+    transition: max-height .3s;
+  }
+  .nav.is-open { max-height: 400px; }
+  .nav a { padding: 1rem; width: 100%; text-align: center; }
+  .nav .btn { width: auto; margin: .5rem 0 1rem; }
+  .call-fab { display: grid; }
+}
+
+@media (max-width: 560px) {
+  .section { padding: 3.5rem 0; }
+  .hero { padding: 3rem 0; }
+  .services, .steps, .offers { grid-template-columns: 1fr; }
+  .contact__form { padding: 1.5rem; }
+}

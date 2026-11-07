@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 330" role="img" aria-label="AGMAT Nieruchomości">
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8a6a2c"/>
+      <stop offset=".35" stop-color="#f1dfa0"/>
+      <stop offset=".6" stop-color="#c9a456"/>
+      <stop offset="1" stop-color="#8f6d2e"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke="url(#gold)" stroke-width="16" stroke-linejoin="miter">
+    <!-- słupek i komin -->
+    <path d="M38 300 V18 H140 V92"/>
+    <!-- dach -->
+    <path d="M62 175 L200 72 L340 175"/>
+    <!-- podstawa -->
+    <path d="M62 170 V258 H480"/>
+  </g>
+  <!-- okienko -->
+  <g fill="url(#gold)">
+    <rect x="160" y="122" width="16" height="16"/>
+    <rect x="180" y="122" width="16" height="16"/>
+    <rect x="160" y="142" width="16" height="16"/>
+    <rect x="180" y="142" width="16" height="16"/>
+  </g>
+  <text x="318" y="240" text-anchor="middle" font-family="Poppins, Arial, sans-serif" font-weight="600" font-size="78" fill="url(#gold)">AGMAT</text>
+  <text x="262" y="312" text-anchor="middle" font-family="Poppins, Arial, sans-serif" font-weight="500" font-size="31" letter-spacing="10" fill="url(#gold)">NIERUCHOMOŚCI</text>
+</svg>
