@@ -1,18 +1,18 @@
 /* ============================================================
    KOLORY I USTAWIENIA – zmień tutaj, a zmieni się na całej stronie
-   (granat i pomarańcz wzięte z logo AGMAT)
+   (czerń i złoto z logo AGMAT na Facebooku)
    ============================================================ */
 :root {
-  --navy: #0c2444;
-  --navy-light: #163a66;
-  --orange: #ed972c;
-  --orange-dark: #d27f16;
+  --navy: #16161c;
+  --navy-light: #26262e;
+  --orange: #c9a456;
+  --orange-dark: #a3812f;
   --cream: #faf6f0;
   --text: #1f2a37;
   --muted: #5b6676;
   --white: #ffffff;
   --radius: 14px;
-  --shadow: 0 10px 30px rgba(12, 36, 68, 0.10);
+  --shadow: 0 10px 30px rgba(22, 22, 28, 0.12);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -69,11 +69,12 @@ a { color: var(--orange-dark); }
   position: sticky; top: 0; z-index: 50;
   background: rgba(255,255,255,.96);
   backdrop-filter: blur(8px);
-  box-shadow: 0 1px 0 rgba(12,36,68,.08);
+  box-shadow: 0 1px 0 rgba(22,22,28,.08);
 }
 .header__inner { display: flex; align-items: center; justify-content: space-between; height: 72px; }
 
 .brand { display: flex; align-items: center; gap: .7rem; text-decoration: none; }
+.brand img { background: var(--navy); border-radius: 10px; padding: 6px 5px; width: 64px; height: auto; }
 .brand__text { display: flex; flex-direction: column; line-height: 1.1; }
 .brand__text strong { font-family: "Poppins", sans-serif; color: var(--navy); font-size: 1.25rem; letter-spacing: .05em; }
 .brand__text small { color: var(--muted); font-size: .75rem; }
@@ -122,7 +123,7 @@ a { color: var(--orange-dark); }
 .services { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
 .service {
   background: var(--white);
-  border: 1px solid rgba(12,36,68,.08);
+  border: 1px solid rgba(22,22,28,.08);
   border-radius: var(--radius);
   padding: 2rem 1.5rem;
   transition: transform .2s, box-shadow .2s;
@@ -132,7 +133,7 @@ a { color: var(--orange-dark); }
   width: 56px; height: 56px;
   display: grid; place-items: center;
   font-size: 1.6rem;
-  background: rgba(237,151,44,.15);
+  background: rgba(201,164,86,.18);
   border-radius: 12px;
   margin-bottom: 1.2rem;
 }
@@ -142,7 +143,7 @@ a { color: var(--orange-dark); }
 .filters { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 2rem; }
 .filter {
   font: inherit; font-weight: 500;
-  border: 1px solid rgba(12,36,68,.2);
+  border: 1px solid rgba(22,22,28,.2);
   background: var(--white);
   color: var(--navy);
   padding: .5rem 1.1rem;
@@ -158,7 +159,7 @@ a { color: var(--orange-dark); }
   background: var(--white);
   border-radius: var(--radius);
   overflow: hidden;
-  box-shadow: 0 2px 10px rgba(12,36,68,.06);
+  box-shadow: 0 2px 10px rgba(22,22,28,.06);
   transition: transform .2s, box-shadow .2s;
 }
 .offer:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
@@ -180,7 +181,7 @@ a { color: var(--orange-dark); }
 .offer__footer {
   margin-top: auto;
   display: flex; justify-content: space-between; align-items: center;
-  border-top: 1px solid rgba(12,36,68,.08);
+  border-top: 1px solid rgba(22,22,28,.08);
   padding-top: .9rem;
 }
 .offer__price { font-family: "Poppins", sans-serif; font-weight: 700; color: var(--navy); font-size: 1.15rem; }
@@ -197,7 +198,7 @@ a { color: var(--orange-dark); }
   border-radius: var(--radius); overflow: auto;
   box-shadow: 0 30px 80px rgba(0,0,0,.4);
 }
-.modal::backdrop { background: rgba(12,36,68,.7); }
+.modal::backdrop { background: rgba(13,13,17,.75); }
 .modal img { width: 100%; aspect-ratio: 5 / 4; object-fit: cover; }
 .modal__body { padding: 1.5rem; }
 .modal__body .offer__price { font-size: 1.5rem; margin-bottom: 1rem; display: block; }
@@ -235,7 +236,7 @@ a { color: var(--orange-dark); }
   text-align: center;
   border: 1px solid rgba(255,255,255,.1);
 }
-.about__card img { margin: 0 auto 1.2rem; }
+.about__card img { margin: 0 auto 1.2rem; width: 180px; height: auto; }
 .about__card p { margin-bottom: 1.5rem; color: rgba(255,255,255,.7); }
 
 /* ---------- Kontakt ---------- */
@@ -257,7 +258,7 @@ a { color: var(--orange-dark); }
 .contact__form input, .contact__form select, .contact__form textarea {
   font: inherit;
   padding: .75rem .9rem;
-  border: 1px solid rgba(12,36,68,.2);
+  border: 1px solid rgba(22,22,28,.2);
   border-radius: 10px;
   background: var(--white);
 }
@@ -267,7 +268,7 @@ a { color: var(--orange-dark); }
 .contact__hint { font-size: .8rem; color: var(--muted); text-align: center; }
 
 /* ---------- Stopka ---------- */
-.footer { background: #081a33; color: rgba(255,255,255,.65); padding: 2.5rem 0; font-size: .9rem; }
+.footer { background: #0d0d11; color: rgba(255,255,255,.65); padding: 2.5rem 0; font-size: .9rem; }
 .footer__inner { display: flex; justify-content: space-between; align-items: center; gap: 2rem; flex-wrap: wrap; }
 
 /* ---------- Przycisk „Zadzwoń” (tylko telefon) ---------- */
